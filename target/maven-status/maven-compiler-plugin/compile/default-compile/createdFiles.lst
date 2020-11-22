@@ -1,0 +1,15 @@
+app\invoice\models\ChangeUserPasswordForm$ChangeUserPasswordFormBuilder.class
+app\invoice\controllers\UserController.class
+app\invoice\configuration\EmailConfig.class
+app\invoice\configuration\PasswordConfig.class
+app\invoice\repositories\GoodsAndServicesRepository.class
+app\invoice\configuration\SecurityConfig.class
+app\invoice\models\ChangeUserPasswordForm.class
+app\invoice\models\Contractor.class
+app\invoice\models\GoodsAndServices.class
+app\invoice\repositories\ContractorRepository.class
+app\invoice\services\UserService.class
+app\invoice\boostrap\LoadFakeData.class
+app\invoice\InvoiceApplication.class
+app\invoice\models\User.class
+app\invoice\repositories\UserRepository.class

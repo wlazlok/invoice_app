@@ -1,0 +1,14 @@
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\repositories\ContractorRepository.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\services\UserService.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\boostrap\LoadFakeData.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\models\Contractor.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\repositories\UserRepository.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\models\User.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\models\GoodsAndServices.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\configuration\PasswordConfig.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\controllers\UserController.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\configuration\EmailConfig.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\configuration\SecurityConfig.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\repositories\GoodsAndServicesRepository.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\InvoiceApplication.java
+C:\Users\Karol\Desktop\invoice_app\src\main\java\app\invoice\models\ChangeUserPasswordForm.java

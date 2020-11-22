@@ -41,7 +41,6 @@ public class Contractor {
     @Column(name = "city")
     String city;
 
-    @NotNull(message = "contractor.user.is.null")
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
