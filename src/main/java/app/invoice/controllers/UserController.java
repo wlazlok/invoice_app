@@ -183,5 +183,15 @@ public class UserController {
         return ResponseEntity.ok(Arrays.asList("User updated successful"));
     }
 
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteUser(@RequestParam("userName") String userName) {
 
+        try {
+            userService.deleteUser(userName);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+
+        return ResponseEntity.ok("User deleted");
+    }
 }
