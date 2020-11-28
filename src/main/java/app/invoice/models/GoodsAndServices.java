@@ -28,7 +28,6 @@ public class GoodsAndServices {
     @Column(name = "unit")
     String unit;
 
-    @NotNull(message = "goodsandservices.user.is.null")
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;

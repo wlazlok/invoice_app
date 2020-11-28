@@ -5,12 +5,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public interface GoodsAndServicesRepository extends CrudRepository<GoodsAndServices, Long> {
 
-    GoodsAndServices save(GoodsAndServices goodsAndServices);
-
-    @Transactional
-    @Modifying
     void deleteByIdGreaterThanEqual(Long id);
 
+    GoodsAndServices getById(Long id);
 }
