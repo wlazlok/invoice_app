@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.validation.annotation.Validated;
+
 import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,47 +20,50 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotNull(message = "user.username.is.null")
+    @NotNull(message = "User username is null")
     @Column(name = "user_name")
+    @Size(max = 50, message = "User user name max size 50")
     String userName;
 
     @Lob
-    @NotNull(message = "user.password.is.null")
+    @NotNull(message = "User password is blank")
     @Column(name = "password")
+    @Size(min = 5, message = "User password min size 5")
     String password;
 
-    @NotNull(message = "user.email.is.null")
+    @NotNull(message = "User email is blank")
     @Column(name = "email")
     //regex
-    String email;
+            String email;
 
-    @NotNull(message = "user.nip.is.null")
+    @NotNull(message = "User NIP is blank")
     @Column(name = "nip")
-    @Size(min = 10, max = 10, message = "user.nip.size.10")
+    @Size(min = 10, max = 10, message = "User NIP size 10")
     String nip;
 
-    @NotNull(message = "user.companyname.is.null")
+    @NotNull(message = "User company name is blank")
     @Column(name = "company_name")
-    @Size(max = 100, message = "user.companyname.max.size.100")
+    @Size(max = 100, message = "User company name max size 100")
     String companyName;
 
-    @NotNull(message = "user.street.is.null")
+    @NotNull(message = "User street is blank")
     @Column(name = "street")
-    @Size(max = 50, message = "user.street.max.size.50")
+    @Size(max = 50, message = "User street max size 50")
     String street;
 
-    @NotNull(message = "user.postalcode.is.null")
+    @NotNull(message = "User postal code is blank")
     @Column(name = "postal_code")
-    @Size(max = 8, message = "user.postalcoide.is.null")
+    @Size(max = 8, message = "User postal code ma size 8")
     String postalCode;
 
-    @NotNull(message = "user.city.is.null")
+    @NotNull(message = "User city is blank")
     @Column(name = "city")
-    @Size(max = 50, message = "user.city.max.size.50")
+    @Size(max = 50, message = "User city max size 50")
     String city;
 
-    @NotNull(message = "user.bankaccountnumber.is.null")
+    @NotNull(message = "User bank ccount number is blank")
     @Column(name = "bank_account_number")
+    @Size(max = 60, message = "User bank account number max size 60")
     String bankAccountNumber;
 
     @Transient

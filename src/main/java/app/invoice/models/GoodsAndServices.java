@@ -5,6 +5,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Data
@@ -16,16 +17,18 @@ public class GoodsAndServices {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotNull(message = "goodsandservices.name.is.null")
+    @NotNull(message = "GoodsAndServices name is null")
     @Column(name = "name")
+    @Size(max = 50, message = "GoodsAndServices name max size 50")
     String name;
 
-    @NotNull(message = "goodsandservices.price.is.null")
+    @NotNull(message = "GoodsAndServices price is blank")
     @Column(name = "price")
     Double price;
 
-    @NotNull(message = "goodsandservices.unit.is.null")
+    @NotNull(message = "GoodsAndServices unit is blank")
     @Column(name = "unit")
+    @Size(max = 20, message = "GoodsAndServices unit max size 20")
     String unit;
 
     @ManyToOne

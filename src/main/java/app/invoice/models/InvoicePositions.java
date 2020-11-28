@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Table(name = "invoice_positions")
@@ -21,6 +22,7 @@ public class InvoicePositions {
 
 //    Double price = null; //todo czy to jest potrzebne i co to jest?
 
+    @NotNull(message = "InvoicePositions amount is blank")
     int amount;
 
     Double totalPrice = null;
