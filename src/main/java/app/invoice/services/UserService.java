@@ -11,6 +11,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -150,5 +151,24 @@ public class UserService {
 
     public String createTempPassword() {
         return UUID.randomUUID().toString();
+    }
+
+    public List<String> validateUserModel(User user) {
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        List<String> errors = Arrays.asList();
+
+        if (!violations.isEmpty()) {
+            violations.stream().forEach(err -> {
+                errors.add(err.getMessage());
+            });
+            log.info("Validation finished with status: " + false);
+            return errors;
+        }
+
+        return Arrays.asList();
+    }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 }
