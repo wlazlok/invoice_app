@@ -34,7 +34,7 @@ public class User {
     @NotNull(message = "User email is blank")
     @Column(name = "email")
     //regex
-            String email;
+    String email;
 
     @NotNull(message = "User NIP is blank")
     @Column(name = "nip")
