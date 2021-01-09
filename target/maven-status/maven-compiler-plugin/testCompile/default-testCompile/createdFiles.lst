@@ -1,1 +1,2 @@
-app\invoice\InvoiceApplicationTests.class
+app\invoice\ModelsTests.class
+app\invoice\BuildModels.class
