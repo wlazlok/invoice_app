@@ -3,8 +3,6 @@ package app.invoice;
 import app.invoice.models.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -12,9 +10,9 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ModelsTests {
+class ValidationTest {
 
     List<String> validationErrors = new ArrayList<>();
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
