@@ -1,74 +1,78 @@
 package app.invoice.models;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-@Data
-@Table(name = "User")
+@Getter
+@Setter
 @Entity
+@Table(name = "User")
 @Validated
-public class User {
+public class User implements UserDetails {
+
+    private String password;
+    private String username;
+    private boolean isAccountNonExpired = true;
+    private boolean isAccountNonLocked = true;
+    private boolean isCredentialsNonExpired = true;
+    private boolean isEnabled = true;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotNull(message = "User username is null")
-    @Column(name = "user_name")
-    @Size(max = 50, message = "User user name max size 50")
-    String userName;
-
-    @Lob
-    @NotNull(message = "User password is blank")
-    @Column(name = "password")
-    @Size(min = 5, message = "User password min size 5")
-    String password;
-
-    @NotNull(message = "User email is blank")
+    @NotEmpty(message = "Email can not be empty!")
+    @NotNull(message = "Please fill email address")
     @Column(name = "email")
     //regex
     String email;
 
-    @NotNull(message = "User NIP is blank")
+//    @NotNull(message = "User NIP is blank")
     @Column(name = "nip")
     @Size(min = 10, max = 10, message = "User NIP size 10")
     String nip;
 
-    @NotNull(message = "User company name is blank")
+//    @NotNull(message = "User company name is blank")
     @Column(name = "company_name")
     @Size(max = 100, message = "User company name max size 100")
     String companyName;
 
-    @NotNull(message = "User street is blank")
+//    @NotNull(message = "User street is blank")
     @Column(name = "street")
     @Size(max = 50, message = "User street max size 50")
     String street;
 
-    @NotNull(message = "User postal code is blank")
+//    @NotNull(message = "User postal code is blank")
     @Column(name = "postal_code")
     @Size(max = 8, message = "User postal code ma size 8")
     String postalCode;
 
-    @NotNull(message = "User city is blank")
+//    @NotNull(message = "User city is blank")
     @Column(name = "city")
     @Size(max = 50, message = "User city max size 50")
     String city;
 
-    @NotNull(message = "User bank ccount number is blank")
+//    @NotNull(message = "User bank ccount number is blank")
     @Column(name = "bank_account_number")
     @Size(max = 60, message = "User bank account number max size 60")
-    String bankAccountNumber;
+    String bankAccountNumber = "123123123123123";
 
     @Transient
     @NotNull(message = "user.confirmpassword.is.null")
+    @NotEmpty(message = "Confirm password can not be empty!")
     String confirmPassword;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user", fetch = FetchType.EAGER)
@@ -78,4 +82,43 @@ public class User {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     List<Contractor> contractors = new ArrayList<Contractor>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @NotEmpty(message = "Password can not be empty!")
+    @NotNull(message = "Password can not be empty!")
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @NotEmpty(message = "Password can not be empty!")
+    @NotNull(message = "Please fill username")
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return isAccountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isAccountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isCredentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isEnabled;
+    }
 }

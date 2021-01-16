@@ -5,12 +5,12 @@ import app.invoice.models.*;
 public class BuildModels {
 
     public static ChangeUserPasswordForm changeUserPasswordFormWithAllFieldsNull() {
-        return ChangeUserPasswordForm.builder()
-                .userName(null)
-                .oldPassword(null)
-                .newPassword(null)
-                .confirmNewPassword(null)
-                .build();
+        ChangeUserPasswordForm changeUserPasswordForm = new ChangeUserPasswordForm();
+        changeUserPasswordForm.setNewPassword(null);
+        changeUserPasswordForm.setOldPassword(null);
+        changeUserPasswordForm.setConfirmNewPassword(null);
+        changeUserPasswordForm.setUserName(null);
+        return changeUserPasswordForm;
     }
 
     public static Contractor contractorWithNullAlFields() {
@@ -55,16 +55,16 @@ public class BuildModels {
     }
 
     public static ResetPasswordForm resetPasswordFormWithNullAllFields() {
-        return ResetPasswordForm.builder()
-                .userName(null)
-                .email(null)
-                .build();
+        ResetPasswordForm resetPasswordForm = new ResetPasswordForm();
+        resetPasswordForm.setEmail(null);
+        resetPasswordForm.setUserName(null);
+        return resetPasswordForm;
     }
 
     public static User UserWithNullAllFields() {
         User user = new User();
         user.setId(null);
-        user.setUserName(null);
+        user.setUsername(null);
         user.setPassword(null);
         user.setEmail(null);
         user.setNip(null);

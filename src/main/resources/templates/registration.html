@@ -1,0 +1,53 @@
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="utf-8">
+    <title>Create an account</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"></script>
+</head>
+
+<body>
+<div sec:authorize="isAnonymous()">
+    <div class="container">
+        <form method="POST" modelAttribute="userForm" th:object="${userForm}" class="form-signin">
+            <h2 class="form-signin-heading">Create your account</h2>
+
+            <input style="margin-bottom: 3%;" th:field="*{username}" type="text" path="username" class="form-control"
+                   placeholder="Username" autofocus="true">
+
+            <input th:field="*{password}" type="password" path="password" class="form-control" placeholder="Password">
+
+            <input th:field="*{confirmPassword}" type="password" path="confirmPassword" class="form-control"
+                   placeholder="Confirm your password">
+            <p>
+                <input th:field="*{email}" type="text" path="email" class="form-control" placeholder="Email">
+            </p>
+
+            <div th:if="${errors} != null" class="container">
+                <div class="alert alert-danger" role="alert" th:each="err : ${errors}" th:text="${err}">
+                </div>
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+            <!--            <a style="text-align: center;" href="/"><p>Back home</p></a>-->
+        </form>
+    </div>
+</div>
+<div sec:authorize="!isAnonymous()">
+    <p>You are loggin in!</p>
+    <a href="/">Back</a>
+</div>
+</body>
+</html>

@@ -49,9 +49,8 @@ public class UserController {
     @PostMapping("/password/change")
     public ResponseEntity<List<String>> changePassword(@RequestBody ChangeUserPasswordForm changeUserPasswordForm) {
         List<String> error = new ArrayList<>();
-
         try {
-            error = userService.changePassword(changeUserPasswordForm);
+            error = userService.changePassword(changeUserPasswordForm, null, null);
         } catch (Exception exception) {
             if (!error.isEmpty()) {
                 log.info("Error during validation changing form");
@@ -95,7 +94,7 @@ public class UserController {
         }
 
         try {
-            error = userService.changePassword(changeForm);
+            error = userService.changePassword(changeForm, null, null);
         } catch (Exception ex) {
             if (!error.isEmpty()) {
                 log.info("Error during validation changing form");
@@ -112,7 +111,7 @@ public class UserController {
     public ResponseEntity<List<String>> editUser(@RequestBody User user) {
         List<String> errors = Arrays.asList();
         try {
-            User userFromDb = userService.findUserByUserName(user.getUserName());
+            User userFromDb = userService.findUserByUserName(user.getUsername());
 
             // możliwość zmiany: email, nip, companyName, street, postalCode, city, bankAccount, hasła
 

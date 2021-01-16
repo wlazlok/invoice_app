@@ -11,6 +11,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -44,10 +45,10 @@ public class UserService {
         List<String> userNames = new ArrayList<>();
 
         users.forEach(usr -> {
-            userNames.add(usr.getUserName());
+            userNames.add(usr.getUsername());
         });
 
-        if (userNames.contains(user.getUserName())) {
+        if (userNames.contains(user.getUsername())) {
             log.info("Username exists in DB");
             throw new Exception("User exists in DB");
         }
@@ -56,26 +57,32 @@ public class UserService {
     }
 
     public List<String> validateUser(User user) {
+        if (!user.getPassword().equals(user.getConfirmPassword())) {
+            log.info("Passwords are not the same");
+            return Collections.singletonList("msg.passwords.are.not.the.same");
+        }
         List<String> errors = new ArrayList<>();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
-
-        if (!user.getPassword().equals(user.getConfirmPassword()) || violations.size() != 0 || !violations.isEmpty()) {
-            errors.add("msg.passwords.are.not.the.same");
-            violations.stream().forEach(err -> errors.add(err.getMessage()));
+        violations.forEach(err -> errors.add(err.getMessage()));
+        if (!violations.isEmpty()) {
             log.info("Validation status: " + false);
             return errors;
+
         }
         log.info("Validation status: " + true);
 
-        return Arrays.asList();
+        return Collections.emptyList();
     }
 
-    public List<String> changePassword(ChangeUserPasswordForm userForm) throws Exception {
+    public List<String> changePassword(ChangeUserPasswordForm userForm, String password, String confirmPass) throws Exception {
         List<String> errors = new ArrayList<>();
         Set<ConstraintViolation<ChangeUserPasswordForm>> violations = validator.validate(userForm);
-
+        userForm.setNewPassword(password);
+        userForm.setConfirmNewPassword(confirmPass);
+        System.out.println(userForm);
         if (!violations.isEmpty()) {
             violations.stream().forEach(err -> {
+                System.out.println(err.getMessage());
                 errors.add(err.getMessage());
             });
             log.info("Change password finished with status: " + false);
@@ -102,7 +109,7 @@ public class UserService {
     }
 
     public User findUserByUserName(String userName) throws Exception {
-        User userFound = userRepository.getByUserName(userName);
+        User userFound = userRepository.getByUsername(userName);
         if(userFound != null) {
             log.info("User found in DB");
             return userFound;
@@ -124,7 +131,7 @@ public class UserService {
         userFound.setPassword(bCryptPasswordEncoder.encode(tmpPass));
         userFound.setConfirmPassword(tmpPass);
         userRepository.save(userFound);
-        sendMessage(resetForm.getEmail(), tmpPass, userFound.getUserName());
+        sendMessage(resetForm.getEmail(), tmpPass, userFound.getUsername());
 
         log.info("Email send");
     }
@@ -142,7 +149,7 @@ public class UserService {
         byte[] encodedUserName = Base64.getEncoder().encode(userName.getBytes());
         byte[] encodedTempPassword = Base64.getEncoder().encode(tempPass.getBytes());
         //todo change link when front ready
-        return "http://localhost:8080/user/password/reset/?user="+new String(encodedUserName, StandardCharsets.UTF_8)+
+        return "http://localhost:8080/reset/password?user="+new String(encodedUserName, StandardCharsets.UTF_8)+
                 "&pass="+new String(encodedTempPassword, StandardCharsets.UTF_8);
     }
 

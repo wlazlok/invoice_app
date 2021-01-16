@@ -33,7 +33,7 @@ public class ContractorServiceTest {
         //given
         User user = new User();
         user.setId(1L);
-        user.setUserName("test user");
+        user.setUsername("test user");
         user.setPassword("password");
         user.setEmail("email@test.com");
         user.setNip("123123123");

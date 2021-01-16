@@ -38,7 +38,7 @@ public class UserServiceTest {
         //given
         User user = new User();
         user.setId(1L);
-        user.setUserName("test user to save");
+        user.setUsername("test user to save");
         user.setPassword("password");
         user.setEmail("email@test.com");
         user.setNip("123123123");
@@ -66,7 +66,7 @@ public class UserServiceTest {
         //given
         User user = new User();
         user.setId(100L);
-        user.setUserName("test user to save");
+        user.setUsername("test user to save");
         user.setPassword("password");
         user.setEmail("email@test.com");
         user.setNip("123123123");
@@ -77,7 +77,7 @@ public class UserServiceTest {
         user.setConfirmPassword("password");
 
         //when
-        when(userRepository.getByUserName(anyString())).thenReturn(user);
+        when(userRepository.getByUsername(anyString())).thenReturn(user);
 
         //then
         User userFound = userService.findUserByUserName(anyString());
