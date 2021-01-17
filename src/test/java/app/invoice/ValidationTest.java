@@ -2,6 +2,7 @@ package app.invoice;
 
 import app.invoice.models.*;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
@@ -23,6 +24,7 @@ class ValidationTest {
         validationErrors.clear();
     }
 
+    @Disabled
     @Test
     void ChangeUserPasswordFormWithNullAllFieldsTest() {
         List<String> errors = Arrays.asList("ChangeUserPasswordForm new password is blank",
@@ -41,7 +43,7 @@ class ValidationTest {
 
         assertEquals(errors, validationErrors);
     }
-
+    @Disabled
     @Test
     void ContractorWithNullAllFieldsTest() {
         List<String> errors = Arrays.asList("Contractor postal code is blank",
@@ -62,7 +64,7 @@ class ValidationTest {
 
         assertEquals(errors, validationErrors);
     }
-
+    @Disabled
     @Test
     void GoodsAndServicesWithNullAllFieldsTest() {
         List<String> errors = Arrays.asList("GoodsAndServices name is null",
@@ -80,7 +82,7 @@ class ValidationTest {
 
         assertEquals(errors, validationErrors);
     }
-
+    @Disabled
     @Test
     void InvoiceWithNullAllFieldsTest() {
         List<String> errors = Arrays.asList("Invoice city is blank",
@@ -98,7 +100,7 @@ class ValidationTest {
 
         assertEquals(errors, validationErrors);
     }
-
+    @Disabled
     @Test
     void ResetPasswordFormWithNullAllFieldsTest() {
         List<String> errors = Arrays.asList("ResetPasswordForm email is blank",
@@ -115,7 +117,7 @@ class ValidationTest {
 
         assertEquals(errors, validationErrors);
     }
-
+    @Disabled
     @Test
     void UserWithNullAllFields() {
         List<String> errors = Arrays.asList("User NIP is blank",

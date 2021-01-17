@@ -89,7 +89,6 @@ public class UserService {
         Set<ConstraintViolation<ChangeUserPasswordForm>> violations = validator.validate(userForm);
         userForm.setNewPassword(password);
         userForm.setConfirmNewPassword(confirmPass);
-        System.out.println(userForm);
         if (!violations.isEmpty()) {
             violations.stream().forEach(err -> {
                 System.out.println(err.getMessage());
@@ -101,7 +100,6 @@ public class UserService {
 
         User userFound = findUserByUserName(userForm.getUserName());
         boolean isOldPasswordEquals = bCryptPasswordEncoder.matches(userForm.getOldPassword(), userFound.getPassword());
-
         if (!isOldPasswordEquals) {
             throw new Exception("Old password ale not equals");
         }

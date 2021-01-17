@@ -79,7 +79,7 @@ public class TemplateController {
         }
         model.addAttribute("resetPasswordForm", new ResetPasswordForm());
         model.addAttribute("success", "Email has been send!");
-        return "resetPasswordRequest";
+        return "login";
     }
 
     @GetMapping("/reset/password")
@@ -92,6 +92,7 @@ public class TemplateController {
 
         ChangeUserPasswordForm changeUserPasswordForm = new ChangeUserPasswordForm();
         changeUserPasswordForm.setUserName(decodedUser);
+        changeUserPasswordForm.setOldPassword(decodedPass);
         model.addAttribute("changeUserPasswordForm", changeUserPasswordForm);
 
         return "resetPassword";
@@ -110,37 +111,35 @@ public class TemplateController {
         String decodedPass = new String(decodedPassByte, StandardCharsets.UTF_8);
         System.out.println(body);
         ChangeUserPasswordForm changeUserPasswordForm = new ChangeUserPasswordForm();
-        if (!decodedUser.equals(body.get("userName"))) {
+        /*if (!decodedUser.equals(body.get("userName"))) {
             model.addAttribute("error", "User names are not equals!");
-            changeUserPasswordForm.setUserName(body.get("userName"));
+            changeUserPasswordForm.setUserName(decodedUser);
             model.addAttribute("changeUserPasswordForm", changeUserPasswordForm);
             return "resetPassword";
-        }
-        if (!decodedPass.equals(body.get("oldPassword"))) {
-            System.out.println("tutaj1");
+        }*/
+        /*if (!decodedPass.equals(body.get("oldPassword"))) {
             model.addAttribute("error", "Passowrd from link and form are not equals!");
-            changeUserPasswordForm.setUserName(body.get("userName"));
+            changeUserPasswordForm.setUserName(decodedUser);
             model.addAttribute("changeUserPasswordForm", changeUserPasswordForm);
             return "resetPassword";
-        }
+        }*/
 
         try {
             String pass = body.get("newPassword");
             String confirmPass = body.get("confirmNewPassword");
-            changeUserPasswordForm.setUserName(body.get("userName"));
-            changeUserPasswordForm.setOldPassword(body.get("oldPassword"));
+            changeUserPasswordForm.setUserName(decodedUser);
+            changeUserPasswordForm.setOldPassword(decodedPass);
             errors = userService.changePassword(changeUserPasswordForm, pass, confirmPass);
-        } catch (Exception e) {
-            if (!errors.isEmpty()) {
+            if (errors != null && !errors.isEmpty()) {
                 model.addAttribute("errors", errors);
                 return "resetPassword";
             }
+        } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("changeUserPasswordForm", changeUserPasswordForm);
             return "resetPassword";
         }
-        model.addAttribute("changeUserPasswordForm", new ChangeUserPasswordForm());
         model.addAttribute("success", "Password successfully changed!");
-        return "resetPassword";
+        return "login";
     }
 }
