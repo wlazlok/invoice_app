@@ -41,6 +41,7 @@ public class TemplateController {
     @GetMapping("registration")
     public String getRegistrationView(Model model) {
         model.addAttribute("userForm", new User());
+        model.addAttribute("users", userService.getAllUsernames());
         return "registration";
     }
 
@@ -55,9 +56,10 @@ public class TemplateController {
         try {
             userService.createUser(userForm);
         } catch (Exception e) {
-            System.out.println(e.getCause());
+            model.addAttribute("error", e.getMessage());
             return "registration";
         }
+        model.addAttribute("success", "Account created!");
         return "login";
     }
 

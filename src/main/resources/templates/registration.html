@@ -25,23 +25,33 @@
             <h2 class="form-signin-heading">Create your account</h2>
 
             <input style="margin-bottom: 3%;" th:field="*{username}" type="text" path="username" class="form-control"
-                   placeholder="Username" autofocus="true">
+                   placeholder="Username" autofocus="true" id="username">
+            <small id="user-exists" class="text-danger" style="display: none">Username already exists.</small>
 
-            <input th:field="*{password}" type="password" path="password" class="form-control" placeholder="Password">
+            <input th:field="*{password}" type="password" path="password" class="form-control" placeholder="Password"
+                   id="password">
+            <small id="password-validation" class="text-danger" style="display: none">Please enter your password</small>
 
             <input th:field="*{confirmPassword}" type="password" path="confirmPassword" class="form-control"
-                   placeholder="Confirm your password">
+                   placeholder="Confirm your password" id="confirm-password">
+            <small id="passwordConfirm-validation" class="text-danger" style="display: none">Please enter your
+                password</small>
             <p>
-                <input th:field="*{email}" type="text" path="email" class="form-control" placeholder="Email">
+                <input th:field="*{email}" type="text" path="email" class="form-control" placeholder="Email" id="email">
             </p>
+            <small id="email-validation" class="text-danger" style="display: none">Email is not valid</small>
 
             <div th:if="${errors} != null" class="container">
                 <div class="alert alert-danger" role="alert" th:each="err : ${errors}" th:text="${err}">
                 </div>
             </div>
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+            <div class="alert alert-danger" role="alert" th:if="${error} != null" th:text="${error}">
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit" id="submit" disabled>Submit</button>
             <!--            <a style="text-align: center;" href="/"><p>Back home</p></a>-->
+            <text th:text="${users}" style="display: none" id="usersnames"></text>
         </form>
     </div>
 </div>
@@ -49,5 +59,86 @@
     <p>You are loggin in!</p>
     <a href="/">Back</a>
 </div>
+<script>
+    const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    let usernames = document.querySelector('#usersnames').textContent.slice(1, -1).split(", ");
+    let username = document.querySelector('#username');
+    const errorMsg = document.querySelector('#user-exists');
+    const emailValidation = document.querySelector('#email-validation');
+    const password = document.querySelector('#password');
+    const confirmPassword = document.querySelector('#confirm-password');
+    let email = document.querySelector('#email');
+    let passwordValidation = document.querySelector('#password-validation');
+    let passwordConfirmValidation = document.querySelector('#passwordConfirm-validation');
+    const submitButton = document.querySelector('#submit');
+
+    let usernameStatus = false;
+    let emailStatus= false;
+    let passwordStatus = false;
+    let passwordConfirmStatus = false;
+    const enableButtonSubmit = function (usernameStatus, emailStatus, passwordStatus, passwordConfirmStatus) {
+        if (usernameStatus && emailStatus && passwordStatus && passwordConfirmStatus) {
+            submitButton.disabled  = false;
+            console.log('tutaj')
+        } else {
+            submitButton.disabled  = true;
+            console.log('tutaj1')
+        }
+    }
+
+    username.addEventListener('focusout', function (event) {
+        event.preventDefault();
+        if (usernames.includes(username.value)) {
+            errorMsg.style.display = 'block';
+            username.style.border = 'solid red';
+            usernameStatus = false;
+        } else {
+            errorMsg.style.display = 'none';
+            username.style.border = 'none';
+            usernameStatus = true;
+        }
+        enableButtonSubmit(usernameStatus, emailStatus, passwordStatus, passwordConfirmStatus);
+    })
+    email.addEventListener('input', function (event) {
+        event.preventDefault();
+        const validationResult = re.test(String(email.value).toLowerCase())
+        if (validationResult) {
+            emailValidation.style.display = 'none';
+            email.style.border = 'none';
+            emailStatus = true;
+        } else {
+            emailValidation.style.display = 'block';
+            email.style.border = 'solid red';
+            emailStatus = false;
+        }
+        enableButtonSubmit(usernameStatus, emailStatus, passwordStatus, passwordConfirmStatus);
+    })
+    password.addEventListener('focusout', function (event) {
+        event.preventDefault();
+        if (password.value === '') {
+            passwordValidation.style.display = 'block';
+            password.style.border = 'solid red';
+            passwordStatus = false;
+        } else {
+            passwordValidation.style.display = 'none';
+            password.style.border = 'none';
+            passwordStatus = true;
+        }
+        enableButtonSubmit(usernameStatus, emailStatus, passwordStatus, passwordConfirmStatus);
+    })
+    confirmPassword.addEventListener('focusout', function (event) {
+        event.preventDefault();
+        if (confirmPassword.value === '') {
+            passwordConfirmValidation.style.display = 'block';
+            confirmPassword.style.border = 'solid red';
+            passwordConfirmStatus = false;
+        } else {
+            passwordConfirmValidation.style.display = 'none';
+            confirmPassword.style.border = 'none';
+            passwordConfirmStatus = true;
+        }
+        enableButtonSubmit(usernameStatus, emailStatus, passwordStatus, passwordConfirmStatus);
+    })
+</script>
 </body>
 </html>

@@ -26,3 +26,5 @@ hs_err_pid*
 HELP.md
 *mvnw.*
 .mvn
+/target
+/.idea

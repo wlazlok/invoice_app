@@ -34,45 +34,45 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotEmpty(message = "Email can not be empty!")
-    @NotNull(message = "Please fill email address")
+    @NotEmpty(message = "msg.err.user.email.is.empty")
+    @NotNull(message = "msg.err.user.email.is.null")
     @Column(name = "email")
     //regex
     String email;
 
 //    @NotNull(message = "User NIP is blank")
     @Column(name = "nip")
-    @Size(min = 10, max = 10, message = "User NIP size 10")
+    @Size(min = 10, max = 10, message = "msg.err.user.nip.size.{min}-{max}")
     String nip;
 
 //    @NotNull(message = "User company name is blank")
     @Column(name = "company_name")
-    @Size(max = 100, message = "User company name max size 100")
+    @Size(max = 100, message = "msg.err.user.companyname.max.size.{max}")
     String companyName;
 
 //    @NotNull(message = "User street is blank")
     @Column(name = "street")
-    @Size(max = 50, message = "User street max size 50")
+    @Size(max = 50, message = "msg.err.user.street.max.size.{max}")
     String street;
 
 //    @NotNull(message = "User postal code is blank")
     @Column(name = "postal_code")
-    @Size(max = 8, message = "User postal code ma size 8")
+    @Size(max = 8, message = "msg.err.user.postalcode.max.size.{max}")
     String postalCode;
 
 //    @NotNull(message = "User city is blank")
     @Column(name = "city")
-    @Size(max = 50, message = "User city max size 50")
+    @Size(max = 50, message = "msg.err.user.city.max.size.{max}")
     String city;
 
 //    @NotNull(message = "User bank ccount number is blank")
     @Column(name = "bank_account_number")
-    @Size(max = 60, message = "User bank account number max size 60")
+    @Size(max = 60, message = "msg.err.user.bankaccountnumber.max.size.{max}")
     String bankAccountNumber = "123123123123123";
 
     @Transient
-    @NotNull(message = "user.confirmpassword.is.null")
-    @NotEmpty(message = "Confirm password can not be empty!")
+    @NotNull(message = "msg.err.user.confirmpassword.is.empty")
+    @NotEmpty(message = "msg.err.user.confirmpassword.is.empty")
     String confirmPassword;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user", fetch = FetchType.EAGER)
@@ -88,15 +88,15 @@ public class User implements UserDetails {
         return null;
     }
 
-    @NotEmpty(message = "Password can not be empty!")
-    @NotNull(message = "Password can not be empty!")
+    @NotEmpty(message = "msg.err.user.password.is.empty")
+    @NotNull(message = "msg.err.user.password.is.empty")
     @Override
     public String getPassword() {
         return password;
     }
 
-    @NotEmpty(message = "Password can not be empty!")
-    @NotNull(message = "Please fill username")
+    @NotEmpty(message = "msg.err.user.username.is.empty")
+    @NotNull(message = "msg.err.user.username.is.empty")
     @Override
     public String getUsername() {
         return username;

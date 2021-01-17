@@ -1,5 +1,6 @@
 package app.invoice.services;
 
+import app.invoice.configuration.ResourceBundleProperties;
 import app.invoice.models.ChangeUserPasswordForm;
 import app.invoice.models.ResetPasswordForm;
 import app.invoice.models.User;
@@ -11,7 +12,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -19,6 +19,8 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+
+import static app.invoice.configuration.ResourceBundleProperties.*;
 
 @Service
 @Slf4j
@@ -40,6 +42,13 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public List<String> getAllUsernames() {
+        Iterable<User> users = userRepository.findAll();
+        List<String> usernames = new ArrayList<>();
+        users.forEach(usr -> usernames.add(usr.getUsername()));
+        return usernames;
+    }
+
     public User createUser(User user) throws Exception {
         Iterable<User> users = userRepository.findAll();
         List<String> userNames = new ArrayList<>();
@@ -50,20 +59,21 @@ public class UserService {
 
         if (userNames.contains(user.getUsername())) {
             log.info("Username exists in DB");
-            throw new Exception("User exists in DB");
+            throw new Exception("Username already exists!");
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     public List<String> validateUser(User user) {
+        ResourceBundle bundle = getBundleProperties();
         if (!user.getPassword().equals(user.getConfirmPassword())) {
             log.info("Passwords are not the same");
             return Collections.singletonList("msg.passwords.are.not.the.same");
         }
         List<String> errors = new ArrayList<>();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
-        violations.forEach(err -> errors.add(err.getMessage()));
+        violations.forEach(err -> errors.add(bundle.getString(err.getMessage())));
         if (!violations.isEmpty()) {
             log.info("Validation status: " + false);
             return errors;

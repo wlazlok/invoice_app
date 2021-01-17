@@ -3,6 +3,7 @@ package app.invoice.repositories;
 import app.invoice.models.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.*;
 
 @Transactional
 public interface UserRepository extends CrudRepository<User, Long> {
