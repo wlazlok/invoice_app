@@ -1,12 +1,15 @@
 package app.invoice.models;
 
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.*;
 
 @Data
 @Entity
@@ -51,4 +54,8 @@ public class Contractor {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "contractor", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    List<Invoice> invoices = new ArrayList<>();
 }

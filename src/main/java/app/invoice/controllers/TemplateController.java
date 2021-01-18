@@ -1,30 +1,48 @@
 package app.invoice.controllers;
 
 import app.invoice.models.ChangeUserPasswordForm;
+import app.invoice.models.Invoice;
 import app.invoice.models.ResetPasswordForm;
 import app.invoice.models.User;
 import app.invoice.services.UserService;
-import org.springframework.http.HttpStatus;
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
+import static app.invoice.boostrap.LoadFakeInvoice.getInvoice;
+
 @Controller
 @RequestMapping("/")
 public class TemplateController {
 
+    @Autowired
+    ServletContext servletContext;
+
+    private final TemplateEngine templateEngine;
     private final UserService userService;
 
-    public TemplateController(UserService userService) {
+    public TemplateController(TemplateEngine templateEngine, UserService userService) {
+        this.templateEngine = templateEngine;
         this.userService = userService;
     }
 
@@ -46,7 +64,7 @@ public class TemplateController {
     }
 
     @PostMapping("registration")
-    public String registerNewUser (@ModelAttribute("userForm") User userForm, BindingResult result, Model model) {
+    public String registerNewUser(@ModelAttribute("userForm") User userForm, BindingResult result, Model model) {
         List<String> errors = userService.validateUser(userForm);
         if (!errors.isEmpty()) {
             model.addAttribute("userForm", userForm);
@@ -99,7 +117,7 @@ public class TemplateController {
     }
 
     @PostMapping(path = "/reset/password",
-            consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE },
+            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public String resetPassword(@RequestParam Map<String, String> body,
                                 Model model) {
@@ -141,5 +159,34 @@ public class TemplateController {
         }
         model.addAttribute("success", "Password successfully changed!");
         return "login";
+    }
+
+    @GetMapping("/invoice")
+    public String pdf(Model model) {
+        model.addAttribute("invoice", getInvoice());
+        return "invoice";
+    }
+
+    @RequestMapping(path = "/invoice/print")
+    public ResponseEntity<?> getPDF(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        Invoice invoice = getInvoice();
+
+        WebContext context = new WebContext(request, response, servletContext);
+        context.setVariable("invoice", invoice);
+
+        String orderHtml = templateEngine.process("invoice", context);
+        ByteArrayOutputStream target = new ByteArrayOutputStream();
+        ConverterProperties converterProperties = new ConverterProperties();
+        converterProperties.setBaseUri("http://localhost:8080");
+        HtmlConverter.convertToPdf(orderHtml, target, converterProperties);
+
+        byte[] bytes = target.toByteArray();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=invoice-" + invoice.getInvoiceNumber() + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(bytes);
+
     }
 }

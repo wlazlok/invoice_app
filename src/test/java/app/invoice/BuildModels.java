@@ -47,8 +47,8 @@ public class BuildModels {
         invoice.setPaymentDate(null);
         invoice.setPayingMethod(null);
         invoice.setTotalPrice(null);
-        invoice.setDealerId(null);
-        invoice.setBuyerId(null);
+//        invoice.setDealerId(null);
+//        invoice.setBuyerId(null);
         invoice.setSeenDate(null);
 
         return invoice;

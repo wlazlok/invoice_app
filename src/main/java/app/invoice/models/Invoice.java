@@ -1,13 +1,15 @@
 package app.invoice.models;
 
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.util.*;
 
 @Data
 @Table(name = "Invoice")
@@ -42,13 +44,25 @@ public class Invoice {
     Double totalPrice;
 
     //@NotNull(message = "Invoice dealer is blank")
-    Long dealerId = null;
+//    Long dealerId = null;
 
     //@NotNull(message = "Invoice buyer is blank")
-    Long buyerId = null;
+//    Long buyerId = null;
 
     boolean isPayed = false;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     Date seenDate = null;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    User user;
+
+    @ManyToOne
+    @JoinColumn(name = "contractor_id", referencedColumnName = "id")
+    Contractor contractor;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "invoice", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    List<InvoicePositions>  invoicePositions = new ArrayList<>();
 }

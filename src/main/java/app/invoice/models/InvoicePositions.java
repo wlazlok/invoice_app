@@ -26,4 +26,12 @@ public class InvoicePositions {
     int amount;
 
     Double totalPrice = null;
+
+    @ManyToOne
+    @JoinColumn(name = "goodsandservices_id", referencedColumnName = "id")
+    GoodsAndServices goodsAndServices;
+
+    @ManyToOne
+    @JoinColumn(name = "contractor_id", referencedColumnName = "id")
+    Invoice invoice = null;
 }

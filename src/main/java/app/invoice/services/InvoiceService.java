@@ -45,8 +45,8 @@ public class InvoiceService {
         User foundUser = getUserById(dealerId);
         Contractor foundContractor = getContractorById(buyerId);
 
-        invoice.setBuyerId(buyerId);
-        invoice.setDealerId(dealerId);
+//        invoice.setBuyerId(buyerId);
+//        invoice.setDealerId(dealerId);
         invoice.setPayingMethod(payingMethod);
 
         //tymczasowo ustawione defualtowo daty

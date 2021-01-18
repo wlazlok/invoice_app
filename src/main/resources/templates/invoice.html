@@ -1,0 +1,123 @@
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .wrap {
+            display: flex;
+            justify-content: center;
+        }
+
+        .wrap-item {
+            min-width: 230px;
+        }
+
+        .wrap-item2 {
+            min-width: 250px;
+            text-align: center;
+            margin-top: 7px;
+        }
+
+        .wrap-item3 {
+            min-width: 630px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        table,
+        td,
+        th {
+            border: 1px solid black;
+        }
+
+        tr {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+<div style="width: 90%;" th:object="${invoice}">
+    <div class="wrap">
+        <div class="wrap-item">
+        </div>
+        <div class="wrap-item" style="text-align: center;">
+            <b>FAKTURA</b><br>
+            <b th:text="'FAKTURA: ' + *{invoiceNumber}"></b>
+        </div>
+        <div class="wrap-item" style="text-align: right; margin-top: 30px">
+            <a th:text="'Data wystawienia: ' + *{dateOfIssue.getDay()} + '.' +  *{dateOfIssue.getMonth()+1} + '.2021'"></a><br>
+            <a th:text="'Data sprzedaży: ' + *{saleDate.getDay()} + '.' +  *{saleDate.getMonth()+1} + '.2021'"></a><br>
+            <a th:text="'Termin płatności: ' + *{paymentDate.getDay()} + '.' +  *{paymentDate.getMonth()+1} + '.2021'"></a><br>
+            <a th:text="'Forma płaności: ' + *{payingMethod}"></a>
+        </div>
+    </div>
+    <div class="wrap" style="margin-top: 4px;">
+        <div class="wrap-item" style="text-align: left;">
+            <a>Nr. konta</a><br>
+            <b th:text="*{user.bankAccountNumber}"></b>
+        </div>
+        <div class="wrap-item" style="text-align: left;">
+        </div>
+        <div class="wrap-item" style="text-align: left;">
+        </div>
+    </div>
+    <div class="wrap">
+        <div class="wrap-item2">
+            <u>Sprzedawca</u><br>
+            <a th:text="'Nazwa firmy: ' + *{user.companyName}"></a><br>
+            <a th:text="'Email: ' + *{user.email}"></a><br>
+            <a th:text="'Adres: ' + *{user.street} + ' ' + *{user.postalCode} + ' ' + *{user.city}"></a><br>
+            <a th:text="'NIP: ' + *{user.nip}"></a>
+        </div>
+        <div class="wrap-item2" style="margin-top: 10px">
+            <u>Nabywca</u><br>
+            <a th:text="'Nazwa firmy: ' + *{contractor.companyName}"></a><br>
+            <a th:text="'Email: ' + *{contractor.email}"></a><br>
+            <a th:text="'Adres: ' + *{contractor.street} + ' ' + *{contractor.postalCode} + ' ' + *{contractor.city}"></a><br>
+            <a th:text="'NIP: ' + *{contractor.nip}"></a>
+        </div>
+    </div>
+    <div class="wrap" style="margin-top: 30px">
+        <div class="wrap-item3">
+            <table style="width: 670px; border-collapse: collapse;">
+                <tr>
+                    <th style="text-align: center"><small>Nazwa towaru lub usługi</small></th>
+                    <th><small>J.m</small></th>
+                    <th><small>Ilość</small></th>
+                    <th><small>Cena jednostkowa(zł)</small></th>
+                    <th><small>Wartość (zł)</small></th>
+                </tr>
+                <tr th:each="inv : *{invoicePositions}">
+                    <td style="text-align: left;" th:text="${inv.goodsAndServices.name}"></td>
+                    <td th:text="${inv.goodsAndServices.unit}"></td>
+                    <td th:text="${inv.amount}"></td>
+                    <td th:text="${inv.goodsAndServices.price.floatValue()}"></td>
+                    <td th:text="${inv.totalPrice.floatValue()}"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">Razem</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td th:text="*{totalPrice.floatValue()}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="wrap" style="margin-top: 40px;">
+        <div class="wrap-item">
+
+        </div>
+        <div class="wrap-item">
+
+        </div>
+        <div class="wrap-item" style="text-align: right;">
+            <a>__________________________________________</a><br>
+            <small>Podpis osoby uprawnionej do wystawienia faktury</small>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

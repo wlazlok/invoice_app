@@ -83,6 +83,10 @@ public class User implements UserDetails {
     @Fetch(value = FetchMode.SUBSELECT)
     List<Contractor> contractors = new ArrayList<Contractor>();
 
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    List<Invoice> invoices = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
