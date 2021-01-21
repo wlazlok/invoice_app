@@ -1,0 +1,17 @@
+.table thead {
+  background: #484FFF;
+}
+
+.table thead th {
+  color: white;
+}
+
+.add-new {
+  border: none;
+  background-color: #484FFF;
+  color: white;
+  padding: 12px 16px;
+  font-size: 20px;
+  margin-top: 25px;
+}
+/*# sourceMappingURL=style-invoice.css.map */
