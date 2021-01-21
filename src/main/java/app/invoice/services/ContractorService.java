@@ -103,7 +103,7 @@ public class ContractorService {
             log.info("Contractor saved!");
 
         } catch (Exception ex) {
-           throw new Exception(ex.getMessage());
+            throw new Exception(ex.getMessage());
         }
         return savedContractor;
     }

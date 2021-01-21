@@ -13,10 +13,8 @@ import javax.validation.constraints.NotNull;
 public class InvoicePositions {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
-
-    Long invoiceId = null;
 
     Long goodsAndServicesId = null;
 
@@ -31,7 +29,11 @@ public class InvoicePositions {
     @JoinColumn(name = "goodsandservices_id", referencedColumnName = "id")
     GoodsAndServices goodsAndServices;
 
+//    @ManyToOne
+//    @JoinColumn(name = "invoiceId", referencedColumnName = "id", insertable=false, updatable=false)
+//    Invoice invoice = null;
+
     @ManyToOne
-    @JoinColumn(name = "contractor_id", referencedColumnName = "id")
-    Invoice invoice = null;
+    @JoinColumn(name= "invoice_id", referencedColumnName = "id")
+    Invoice invoice;
 }

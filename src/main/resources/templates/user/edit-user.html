@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+<header class="header">
+    <div th:replace="fragments/header :: header"></div>
+</header>
+<main>
+    <section class="create-invoice">
+        <div class="title">
+            <h1>Edytuj użytkownika</h1>
+            <hr align="left"></hr>
+        </div>
+        <form method="POST" modelAttribute="user" th:object="${user}" class="form-signin">
+            <div class="form-element">
+                <h4>Nazwa uzytkownika</h4>
+                <input type="text" th:field="*{username}" disabled>
+            </div>
+            <div class="form-element">
+                <h4>Email</h4>
+                <input type="text" th:field="*{email}">
+            </div>
+            <div class="form-element">
+                <h4>NIP</h4>
+                <input type="text" th:field="*{nip}">
+            </div>
+            <div class="form-element">
+                <h4>Adres</h4>
+                <input type="text" th:field="*{street}">
+            </div>
+            <div class="form-element">
+                <h4>Nazwa firmy</h4>
+                <input type="text" th:field="*{companyName}">
+            </div>
+            <div class="form-element">
+                <h4>Miasto</h4>
+                <input type="text" th:field="*{city}">
+            </div>
+            <div class="form-element">
+                <h4>Kod pocztowy</h4>
+                <input type="text" th:field="*{postalCode}">
+            </div>
+            <div class="form-element">
+                <h4>Nr. konta</h4>
+                <input type="text" th:field="*{bankAccountNumber}">
+            </div>
+            <div class="form-element">
+                <h4>Wprowadz hasło aby potwierdzić zmiany</h4>
+                <input type="password" th:field="*{password}">
+            </div>
+            <button class="add-new">Edytuj</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

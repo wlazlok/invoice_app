@@ -18,21 +18,21 @@ public class InvoiceController {
         this.invoiceService = invoiceService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createInvoice(@RequestBody Invoice invoice,
-                                                @RequestParam("userId") String userId,
-                                                @RequestParam("id") String buyerId) {
-        try {
-            invoiceService.validateInvoice(invoice);
-            invoiceService.createInvoice(invoice, Long.valueOf(buyerId), Long.valueOf(userId));
-
-        } catch (Exception ex) {
-            log.info("Error during creating invoice:  " + ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
-
-        return ResponseEntity.ok("Invoice created");
-    }
+//    @PostMapping("/create")
+//    public ResponseEntity<String> createInvoice(@RequestBody Invoice invoice,
+//                                                @RequestParam("userId") String userId,
+//                                                @RequestParam("id") String buyerId) {
+//        try {
+//            invoiceService.validateInvoice(invoice);
+//            invoiceService.createInvoice(invoice, Long.valueOf(buyerId), Long.valueOf(userId));
+//
+//        } catch (Exception ex) {
+//            log.info("Error during creating invoice:  " + ex.getMessage());
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+//        }
+//
+//        return ResponseEntity.ok("Invoice created");
+//    }
 
     @PostMapping("/edit")
     public ResponseEntity<String> editInvoice(@RequestBody Invoice invoice,

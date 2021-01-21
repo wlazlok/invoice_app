@@ -40,39 +40,39 @@ public class User implements UserDetails {
     //regex
     String email;
 
-//    @NotNull(message = "User NIP is blank")
+    //    @NotNull(message = "User NIP is blank")
     @Column(name = "nip")
     @Size(min = 10, max = 10, message = "msg.err.user.nip.size.{min}-{max}")
     String nip;
 
-//    @NotNull(message = "User company name is blank")
+    //    @NotNull(message = "User company name is blank")
     @Column(name = "company_name")
     @Size(max = 100, message = "msg.err.user.companyname.max.size.{max}")
     String companyName;
 
-//    @NotNull(message = "User street is blank")
+    //    @NotNull(message = "User street is blank")
     @Column(name = "street")
     @Size(max = 50, message = "msg.err.user.street.max.size.{max}")
     String street;
 
-//    @NotNull(message = "User postal code is blank")
+    //    @NotNull(message = "User postal code is blank")
     @Column(name = "postal_code")
     @Size(max = 8, message = "msg.err.user.postalcode.max.size.{max}")
     String postalCode;
 
-//    @NotNull(message = "User city is blank")
+    //    @NotNull(message = "User city is blank")
     @Column(name = "city")
     @Size(max = 50, message = "msg.err.user.city.max.size.{max}")
     String city;
 
-//    @NotNull(message = "User bank ccount number is blank")
+    //    @NotNull(message = "User bank ccount number is blank")
     @Column(name = "bank_account_number")
     @Size(max = 60, message = "msg.err.user.bankaccountnumber.max.size.{max}")
     String bankAccountNumber = "123123123123123";
 
-    @Transient
-    @NotNull(message = "msg.err.user.confirmpassword.is.empty")
-    @NotEmpty(message = "msg.err.user.confirmpassword.is.empty")
+    //    @Transient
+//    @NotNull(message = "msg.err.user.confirmpassword.is.empty")
+//    @NotEmpty(message = "msg.err.user.confirmpassword.is.empty")
     String confirmPassword;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user", fetch = FetchType.EAGER)

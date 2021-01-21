@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+<header class="header">
+    <div th:replace="fragments/header :: header"></div>
+</header>
+<main>
+    <section class="create-invoice">
+        <div class="title">
+            <h1>Towary i Usługi</h1>
+            <hr align="left"></hr>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nazwa towaru</th>
+                <th scope="col">Jednostka</th>
+                <th scope="col">Cena brutto</th>
+                <th scope="col">Edytuj</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="good : ${goods}">
+                <th scope="row" th:text="${good.id}"></th>
+                <td th:text="${good.name}"></td>
+                <td th:text="${good.unit}"></td>
+                <td th:text="${good.price}"></td>
+                <td>
+                    <a th:href="'/goods/edit/' + ${good.id}">
+                        <button type="button" class="btn btn-primary btn-sm">Edytuj</button>
+                    </a>
+                </td>
+                <td>
+                    <a th:href="'/goods/delete/' + ${good.id}">
+                        <button type="button" class="btn btn-danger btn-sm">Usuń</button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <a href="/goods/create">
+            <button class="add-new">Dodaj usługę</button>
+        </a>
+    </section>
+</main>
+</body>
+</html>

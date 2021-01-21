@@ -24,7 +24,7 @@ public class Contractor {
     @NotNull(message = "Contractor email is blank")
     @Column(name = "email")
     //regex
-     String email;
+    String email;
 
     @NotNull(message = "Contractor NIP is blank")
     @Column(name = "nip")

@@ -1,12 +1,14 @@
 package app.invoice.controllers;
 
-import app.invoice.models.ChangeUserPasswordForm;
-import app.invoice.models.Invoice;
-import app.invoice.models.ResetPasswordForm;
-import app.invoice.models.User;
+import app.invoice.models.*;
+import app.invoice.repositories.GoodsAndServicesRepository;
+import app.invoice.repositories.InvoicePositionRepository;
+import app.invoice.repositories.InvoiceRepository;
+import app.invoice.services.ContractorService;
 import app.invoice.services.UserService;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
+import org.bouncycastle.math.raw.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,10 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static app.invoice.boostrap.LoadFakeInvoice.getInvoice;
 
@@ -38,13 +37,28 @@ public class TemplateController {
     @Autowired
     ServletContext servletContext;
 
-    private final TemplateEngine templateEngine;
+    private final ContractorService contractorService;
     private final UserService userService;
+    private final TemplateEngine templateEngine;
+    private final GoodsAndServicesRepository goodsAndServicesRepository;
+    private final InvoicePositionRepository invoicePositionRepository;
+    private final InvoiceRepository invoiceRepository;
 
-    public TemplateController(TemplateEngine templateEngine, UserService userService) {
+
+    public TemplateController(ContractorService contractorService, TemplateEngine templateEngine, UserService userService, GoodsAndServicesRepository goodsAndServicesRepository, InvoicePositionRepository invoicePositionRepository, InvoiceRepository invoiceRepository) {
+        this.contractorService = contractorService;
         this.templateEngine = templateEngine;
         this.userService = userService;
+        this.goodsAndServicesRepository = goodsAndServicesRepository;
+        this.invoicePositionRepository = invoicePositionRepository;
+        this.invoiceRepository = invoiceRepository;
     }
+
+//    @GetMapping(value = "/contractor", produces = {MediaType.ALL_VALUE})
+//    public String getContractor(){
+//        return "/contractor/add-contractor";
+//    }
+
 
     @GetMapping("login")
     public String getLoginPView() {
@@ -188,5 +202,71 @@ public class TemplateController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(bytes);
 
+    }
+
+    @GetMapping("/invoice/create")
+    public String getCreateInvoiceView(Model model) {
+        List<PayingMethods> payingMethods = Arrays.asList(PayingMethods.values());
+        User user = userService.getUserById(1L);
+        List<GoodsAndServices> goods = new ArrayList<>();
+        goodsAndServicesRepository.findAll().forEach(goods::add);
+        model.addAttribute("goods", goods);
+//        model.addAttribute("positions", new ArrayList<Integer>());
+        model.addAttribute("contractors", user.getContractors());
+        model.addAttribute("payingMethod", payingMethods);
+        model.addAttribute("invoice", new Invoice());
+        return "invoiceCreate";
+    }
+
+    @RequestMapping(value = "/invoice/create", method = RequestMethod.POST)
+    public String createInvoice(@ModelAttribute Invoice invoice, @RequestParam(value = "action") String action, Model model) {
+        String[] actionTab = action.split(";");
+        if (actionTab[0].equals("save")) {
+            if (actionTab[1].equals("null")) {
+                System.out.println("NOWA");
+                Invoice saved = invoiceRepository.save(invoice);
+                System.out.println("ZAPISANA " + saved.getGoodsAndServices().size());
+                Invoice found = invoiceRepository.getById(saved.getId());
+                System.out.println("ZNALEZIONA " + found.getGoodsAndServices().size());
+                List<GoodsAndServices> goods = new ArrayList<>();
+                goodsAndServicesRepository.findAll().forEach(goods::add);
+                User user = userService.getUserById(1L);
+                model.addAttribute("goods", goods);
+                model.addAttribute("contractors", user.getContractors());
+                model.addAttribute("invoice", saved);
+                return "invoiceCreate";
+            } else {
+                System.out.println("UPDATE");
+                Invoice foundInvoice = invoiceRepository.getById(Long.valueOf(actionTab[1]));
+                System.out.println("FOUND: " + foundInvoice.getGoodsAndServices().size());
+                System.out.println("PORTAL: " + invoice.getGoodsAndServices().size());
+                List<GoodsAndServices> goods = new ArrayList<>();
+                goodsAndServicesRepository.findAll().forEach(goods::add);
+                User user = userService.getUserById(1L);
+                model.addAttribute("invoice", foundInvoice);
+                model.addAttribute("goods", goods);
+                model.addAttribute("contractors", user.getContractors());
+                return "invoiceCreate";
+            }
+        } else if (actionTab.equals("create")) {
+
+        }
+//        if (action.equals("save")) {
+//            User user = userService.getUserById(1L);
+//            List<GoodsAndServices> goods = new ArrayList<>();
+//            goodsAndServicesRepository.findAll().forEach(goods::add);
+//            //System.out.println(invoice); //path variable -> szukac po id > update -> na strone
+//            Invoice savedInvoice = invoiceRepository.save(invoice);
+//            invoice.getInvoicePositions().forEach(System.out::println);
+//            model.addAttribute("goods", goods);
+//            model.addAttribute("contractors", user.getContractors());
+//            model.addAttribute("invoice", savedInvoice);
+//            return "invoiceCreate";
+//        } else if (action.equals("create")) {
+//            System.out.println("ES");
+//        }
+//        return "login";
+
+        return null;
     }
 }

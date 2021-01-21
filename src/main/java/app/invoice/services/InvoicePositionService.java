@@ -42,7 +42,7 @@ public class InvoicePositionService {
 
         Double totalPrice = invoicePositions.getAmount() * foundGoodsAndServices.getPrice();
 
-        invoicePositions.setInvoiceId(foundInvoice.getId());
+//        invoicePositions.setInvoiceId(foundInvoice.getId());
         invoicePositions.setGoodsAndServicesId(foundGoodsAndServices.getId());
         invoicePositions.setTotalPrice(totalPrice);
 

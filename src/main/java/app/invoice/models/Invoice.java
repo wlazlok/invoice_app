@@ -12,13 +12,13 @@ import javax.validation.constraints.Size;
 import java.util.*;
 
 @Data
-@Table(name = "Invoice")
+@Table(name = "invoice")
 @Entity
 @Validated
 public class Invoice {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
     @NotNull(message = "Invoice invoice number is blank")
@@ -62,7 +62,11 @@ public class Invoice {
     @JoinColumn(name = "contractor_id", referencedColumnName = "id")
     Contractor contractor;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "invoice", fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
+    //    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "invoice", fetch = FetchType.EAGER)
+//    @Fetch(value = FetchMode.SUBSELECT)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
     List<InvoicePositions>  invoicePositions = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "invoice", fetch = FetchType.LAZY)
+    List<GoodsAndServices> goodsAndServices;
 }

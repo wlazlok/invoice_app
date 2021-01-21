@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+<header class="header">
+    <div th:replace="fragments/header :: header"></div>
+</header>
+<main>
+    <section class="create-invoice">
+        <div class="title">
+            <h1>Kontrahenci</h1>
+            <hr align="left"></hr>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nazwa kontrahenta</th>
+                <th scope="col">NIP</th>
+                <th scope="col">Adres</th>
+                <th scope="col">Kod pocztowy</th>
+                <th scope="col">Miasto</th>
+                <th scope="col">Email</th>
+                <th scope="col">Edycja</th>
+                <th scope="col">Usuń</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="contractor : ${contractors}">
+                <th scope="row" th:text="${contractor.id}"></th>
+                <td th:text="${contractor.companyName}"></td>
+                <td th:text="${contractor.nip}"></td>
+                <td th:text="${contractor.street}"></td>
+                <td th:text="${contractor.postalCode}"></td>
+                <td th:text="${contractor.city}"></td>
+                <td th:text="${contractor.email}"></td>
+                <td>
+                    <a th:href="'/contractor/edit/' + ${contractor.id}">
+                        <button type="button" class="btn btn-primary btn-sm">Edytuj</button>
+                    </a>
+                </td>
+                <td>
+                    <a th:href="'/contractor/delete/' + ${contractor.id}">
+                        <button type="button" class="btn btn-danger btn-sm">Usuń</button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+        <a href="/contractor/create">
+            <button class="add-new">Dodaj nowego kontrahenta</button>
+        </a>
+    </section>
+</main>
+</body>
+</html>

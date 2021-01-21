@@ -41,4 +41,8 @@ public class GoodsAndServices {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "goodsAndServices", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     List<InvoicePositions> invoicePositions = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name= "invoice_id", referencedColumnName = "id")
+    Invoice invoice;
 }

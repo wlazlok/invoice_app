@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+<header class="header">
+    <div th:replace="fragments/header :: header"></div>
+</header>
+<main>
+    <section class="create-invoice">
+        <div class="title">
+            <h1>Dodaj towar</h1>
+            <hr align="left"></hr>
+        </div>
+        <form method="POST" modelAttribute="good" th:object="${good}" class="form-signin">
+            <div class="form-element">
+                <h4>Nazwa</h4>
+                <input type="text" th:field="*{name}">
+            </div>
+            <div class="form-element">
+                <h4>Cena</h4>
+                <input type="text" th:field="*{price}">
+            </div>
+            <div class="form-element">
+                <h4>Jednostka</h4>
+                <input type="text" th:field="*{unit}">
+            </div>
+            <button class="add-new">Dodaj</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

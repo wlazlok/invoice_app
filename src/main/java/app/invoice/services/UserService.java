@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -189,5 +191,22 @@ public class UserService {
         User userFound = findUserByUserName(userName);
 
         userRepository.deleteById(userFound.getId());
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.getById(id);
+    }
+
+    public User getUserFromContext() {
+        Long id;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            id = ((User) principal).getId();
+            return getUserById(id);
+        } else {
+            String username = principal.toString();
+            log.info("userService.getUserFromContext.userNotFound");
+            return null;
+        }
     }
 }
