@@ -160,29 +160,47 @@
         <form method="POST" modelAttribute="contractor" th:object="${contractor}" class="form-signin">
             <div class="form-element">
                 <h4>Nazwa</h4>
-                <input type="text" th:field="*{companyName}">
+                <input type="text" th:field="*{companyName}" id="companyName">
+                <div class="alert alert-danger" style="display: none; width: 350px; margin-top: 1%" id="companyNameError">
+                    <small class="text-danger">Proszę wypełnić pole</small>
+                </div>
             </div>
             <div class="form-element">
                 <h4>NIP</h4>
-                <input type="text" th:field="*{nip}">
+                <input type="text" th:field="*{nip}" id="nip">
+                <div class="alert alert-danger" style="display: none; width: 350px; margin-top: 1%" id="nipError">
+                    <small class="text-danger">Wymagana ilość znaków: 10</small>
+                </div>
             </div>
             <div class="form-element">
                 <h4>Adres</h4>
-                <input type="text" th:field="*{street}">
+                <input type="text" th:field="*{street}" id="street">
+                <div class="alert alert-danger" style="display: none; width: 350px; margin-top: 1%" id="streetError">
+                    <small class="text-danger">Proszę wypełnić pole</small>
+                </div>
             </div>
             <div class="form-element">
                 <h4>Kod pocztowy</h4>
-                <input type="text" th:field="*{postalCode}">
+                <input type="text" th:field="*{postalCode}" id="postalCode">
+                <div class="alert alert-danger" style="display: none; width: 350px; margin-top: 1%" id="postalCodeError">
+                    <small class="text-danger">Proszę wypełnić pole</small>
+                </div>
             </div>
             <div class="form-element">
                 <h4>Miasto</h4>
-                <input type="text" th:field="*{city}">
+                <input type="text" th:field="*{city}" id="city">
+                <div class="alert alert-danger" style="display: none; width: 350px; margin-top: 1%" id="cityError">
+                    <small class="text-danger">Proszę wypełnić pole</small>
+                </div>
             </div>
             <div class="form-element">
                 <h4>Email</h4>
-                <input type="email" th:field="*{email}">
+                <input type="text" th:field="*{email}" id="email">
+                <div class="alert alert-danger" style="display: none; width: 350px; margin-top: 1%" id="emailError">
+                    <small class="text-danger">Niepoprawny format email</small>
+                </div>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Dodaj</button>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" id="buttonAdd" disabled>Dodaj</button>
         </form>
     </section>
 </main>
@@ -203,6 +221,152 @@
             menuItem[i].classList.add("activee");
         }
     }
+</script>
+<script>
+    const regexEmail = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    const companyName = document.querySelector('#companyName');
+    const companyNameError = document.querySelector('#companyNameError');
+    const nip = document.querySelector('#nip');
+    const nipError = document.querySelector('#nipError');
+    const street = document.querySelector('#street');
+    const streetError = document.querySelector('#streetError');
+    const postalCode = document.querySelector('#postalCode');
+    const postalCodeError = document.querySelector('#postalCodeError');
+    const city = document.querySelector('#city');
+    const cityError =document.querySelector('#cityError');
+    const email = document.querySelector('#email');
+    const emailError = document.querySelector('#emailError');
+    const addButton = document.querySelector('#buttonAdd');
+
+    let companyNameStatus = false;
+    let nipStatus = false;
+    let streetStatus = false;
+    let postalCodeStatus = false;
+    let cityStatus = false;
+    let emailStatus = false;
+
+    // const status = [companyNameStatus, nipStatus, streetStatus, postalCodeStatus, cityStatus, emailStatus];
+
+    let status = {
+        companyNameStatus : false,
+        nipStatus : false,
+        streetStatus : false,
+        postalCodeStatus : false,
+        cityStatus : false,
+        emailStatus : false
+    };
+    const displayError = function(field, errorField) {
+        errorField.style.display = 'block';
+        field.style.border = 'solid red';
+    }
+    const hideError = function (field, errorField) {
+        errorField.style.display = 'none';
+        field.style.border = '1px solid #b3b3b3';
+    }
+
+    const enableEmailButton = function (status) {
+        let isValid = false;
+        Object.values(status).forEach(function (val, i) {
+            if (val) {
+                isValid = true;
+            } else {
+                isValid = false;
+            }
+        })
+        if (!isValid) {
+            console.log("turaj")
+            addButton.disabled = true;
+        } else {
+            console.log("turaj1")
+            addButton.disabled = false;
+        }
+        // let isValid = false;
+        // status.forEach(function (stat, i) {
+        //     if (stat) {
+        //         isValid = true
+        //     } else {
+        //         isValid = false;
+        //     }
+        // })
+        // console.log(status)
+        // if (isValid) {
+        //     addButton.style.disabled = false;
+        // } else {
+        //     addButton.style.disabled = true;
+        // }
+    }
+
+    companyName.addEventListener('focusout', function(event) {
+        event.preventDefault();
+        if (companyName.value === '') {
+            displayError(companyName, companyNameError);
+            status.companyNameStatus = false;
+        } else {
+            hideError(companyName, companyNameError);
+            status.companyNameStatus = true;
+        }
+        enableEmailButton(status);
+    })
+    nip.addEventListener('input', function(event) {
+        event.preventDefault();
+        if (nip.value === '') {
+            displayError(nip, nipError);
+            status.nipStatus = false;
+        } else if (nip.value.length < 10) {
+            displayError(nip, nipError);
+            status.nipStatus = false;
+        } else {
+            hideError(nip, nipError)
+            status.nipStatus = true;
+        }
+        enableEmailButton(status);
+    })
+    street.addEventListener('focusout', function (event) {
+        event.preventDefault();
+        if (street.value === '') {
+            displayError(street, streetError);
+            status.streetStatus = false;
+        } else {
+            hideError(street, streetError);
+            status.streetStatus = true;
+        }
+        enableEmailButton(status);
+    })
+    postalCode.addEventListener('focusout', function (event) {
+        event.preventDefault();
+        if (postalCode.value === '') {
+            displayError(postalCode, postalCodeError);
+            status.postalCodeStatus = false;
+        } else {
+            hideError(postalCode, postalCodeError);
+            status.postalCodeStatus = true;
+        }
+        enableEmailButton(status);
+    })
+    city.addEventListener('focusout', function (event) {
+        event.preventDefault();
+        if (city.value === '') {
+            displayError(city, cityError);
+            status.cityStatus = false;
+        } else {
+            hideError(city, cityError);
+            status.cityStatus = true;
+        }
+        enableEmailButton(status);
+    })
+    email.addEventListener('focusout', function (event) {
+        event.preventDefault();
+        const validationResult = regexEmail.test(String(email.value).toLowerCase())
+        if (!validationResult) {
+            displayError(email, emailError);
+            status.emailStatus = false;
+        } else {
+            hideError(email, emailError);
+            status.emailStatus = true;
+        }
+        enableEmailButton(status);
+    })
+
 </script>
 </body>
 </html>
