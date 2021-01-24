@@ -161,7 +161,8 @@
             <div class="form-element">
                 <h4>Nazwa</h4>
                 <input type="text" th:field="*{companyName}" id="companyName">
-                <div class="alert alert-danger" style="display: none; width: 350px; margin-top: 1%" id="companyNameError">
+                <div class="alert alert-danger" style="display: none; width: 350px; margin-top: 1%"
+                     id="companyNameError">
                     <small class="text-danger">Proszę wypełnić pole</small>
                 </div>
             </div>
@@ -182,7 +183,8 @@
             <div class="form-element">
                 <h4>Kod pocztowy</h4>
                 <input type="text" th:field="*{postalCode}" id="postalCode">
-                <div class="alert alert-danger" style="display: none; width: 350px; margin-top: 1%" id="postalCodeError">
+                <div class="alert alert-danger" style="display: none; width: 350px; margin-top: 1%"
+                     id="postalCodeError">
                     <small class="text-danger">Proszę wypełnić pole</small>
                 </div>
             </div>
@@ -200,7 +202,9 @@
                     <small class="text-danger">Niepoprawny format email</small>
                 </div>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit" id="buttonAdd" disabled>Dodaj</button>
+            <button class="btn btn-primary btn-block btn-sm" type="submit" id="buttonAdd"
+                    style="width: 150px; margin-top: 2%;background-color: #484FFF;color: white;" disabled>Dodaj
+            </button>
         </form>
     </section>
 </main>
@@ -233,29 +237,20 @@
     const postalCode = document.querySelector('#postalCode');
     const postalCodeError = document.querySelector('#postalCodeError');
     const city = document.querySelector('#city');
-    const cityError =document.querySelector('#cityError');
+    const cityError = document.querySelector('#cityError');
     const email = document.querySelector('#email');
     const emailError = document.querySelector('#emailError');
     const addButton = document.querySelector('#buttonAdd');
 
-    let companyNameStatus = false;
-    let nipStatus = false;
-    let streetStatus = false;
-    let postalCodeStatus = false;
-    let cityStatus = false;
-    let emailStatus = false;
-
-    // const status = [companyNameStatus, nipStatus, streetStatus, postalCodeStatus, cityStatus, emailStatus];
-
     let status = {
-        companyNameStatus : false,
-        nipStatus : false,
-        streetStatus : false,
-        postalCodeStatus : false,
-        cityStatus : false,
-        emailStatus : false
+        companyNameStatus: false,
+        nipStatus: false,
+        streetStatus: false,
+        postalCodeStatus: false,
+        cityStatus: false,
+        emailStatus: false
     };
-    const displayError = function(field, errorField) {
+    const displayError = function (field, errorField) {
         errorField.style.display = 'block';
         field.style.border = 'solid red';
     }
@@ -264,39 +259,15 @@
         field.style.border = '1px solid #b3b3b3';
     }
 
-    const enableEmailButton = function (status) {
-        let isValid = false;
+    const enableAddButton = function (status) {
+        let isValid = true;
         Object.values(status).forEach(function (val, i) {
-            if (val) {
-                isValid = true;
-            } else {
-                isValid = false;
-            }
+            if (!val) isValid = false;
         })
-        if (!isValid) {
-            console.log("turaj")
-            addButton.disabled = true;
-        } else {
-            console.log("turaj1")
-            addButton.disabled = false;
-        }
-        // let isValid = false;
-        // status.forEach(function (stat, i) {
-        //     if (stat) {
-        //         isValid = true
-        //     } else {
-        //         isValid = false;
-        //     }
-        // })
-        // console.log(status)
-        // if (isValid) {
-        //     addButton.style.disabled = false;
-        // } else {
-        //     addButton.style.disabled = true;
-        // }
+        addButton.disabled = !isValid;
     }
 
-    companyName.addEventListener('focusout', function(event) {
+    companyName.addEventListener('focusout', function (event) {
         event.preventDefault();
         if (companyName.value === '') {
             displayError(companyName, companyNameError);
@@ -305,21 +276,21 @@
             hideError(companyName, companyNameError);
             status.companyNameStatus = true;
         }
-        enableEmailButton(status);
+        enableAddButton(status);
     })
-    nip.addEventListener('input', function(event) {
+    nip.addEventListener('focusout', function (event) {
         event.preventDefault();
         if (nip.value === '') {
             displayError(nip, nipError);
             status.nipStatus = false;
-        } else if (nip.value.length < 10) {
+        } else if (nip.value.length < 10 || nip.value.length > 10) {
             displayError(nip, nipError);
             status.nipStatus = false;
         } else {
             hideError(nip, nipError)
             status.nipStatus = true;
         }
-        enableEmailButton(status);
+        enableAddButton(status);
     })
     street.addEventListener('focusout', function (event) {
         event.preventDefault();
@@ -330,7 +301,7 @@
             hideError(street, streetError);
             status.streetStatus = true;
         }
-        enableEmailButton(status);
+        enableAddButton(status);
     })
     postalCode.addEventListener('focusout', function (event) {
         event.preventDefault();
@@ -341,7 +312,7 @@
             hideError(postalCode, postalCodeError);
             status.postalCodeStatus = true;
         }
-        enableEmailButton(status);
+        enableAddButton(status);
     })
     city.addEventListener('focusout', function (event) {
         event.preventDefault();
@@ -352,7 +323,7 @@
             hideError(city, cityError);
             status.cityStatus = true;
         }
-        enableEmailButton(status);
+        enableAddButton(status);
     })
     email.addEventListener('focusout', function (event) {
         event.preventDefault();
@@ -364,7 +335,7 @@
             hideError(email, emailError);
             status.emailStatus = true;
         }
-        enableEmailButton(status);
+        enableAddButton(status);
     })
 
 </script>
