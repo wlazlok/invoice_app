@@ -34,19 +34,19 @@ public class LoadFakeData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        User fakeUser = new User();
-//
-//        fakeUser.setPassword(bCryptPasswordEncoder.encode("admin"));
-//        fakeUser.setUsername("admin");
-//        fakeUser.setEmail("test@email.com");
-//        fakeUser.setNip("6462933516");
-//        fakeUser.setCompanyName("Test Company sp.z.o.o");
-//        fakeUser.setStreet("Example 25");
-//        fakeUser.setPostalCode("22-933");
-//        fakeUser.setCity("Cracow");
-//        fakeUser.setBankAccountNumber("61 1090 1014 0000 0712 1981 2874");
-//        fakeUser.setConfirmPassword("admin");
-//        User createdUser = userRepository.save(fakeUser);
+        User fakeUser = new User();
+
+        fakeUser.setPassword(bCryptPasswordEncoder.encode("admin"));
+        fakeUser.setUsername("admin");
+        fakeUser.setEmail("test@email.com");
+        fakeUser.setNip("6462933516");
+        fakeUser.setCompanyName("Test Company sp.z.o.o");
+        fakeUser.setStreet("Example 25");
+        fakeUser.setPostalCode("22-933");
+        fakeUser.setCity("Cracow");
+        fakeUser.setBankAccountNumber("61 1090 1014 0000 0712 1981 2874");
+        fakeUser.setConfirmPassword("admin");
+        User createdUser = userRepository.save(fakeUser);
 //
 //        GoodsAndServices goodsAndServices = new GoodsAndServices();
 //        goodsAndServices.setName("Test good");

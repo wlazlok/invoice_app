@@ -1,12 +1,15 @@
 package app.invoice.models;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
+@Setter
 @Table(name = "invoice_positions")
 @Entity
 @Validated

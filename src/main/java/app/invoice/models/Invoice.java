@@ -1,6 +1,8 @@
 package app.invoice.models;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,24 +13,25 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.*;
 
-@Data
+@Getter
+@Setter
 @Table(name = "invoice")
 @Entity
-@Validated
+//@Validated
 public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    @NotNull(message = "Invoice invoice number is blank")
+    //    @NotNull(message = "Invoice invoice number is blank")
     @Size(max = 10, message = "Invoice invoice number max size 10")
     String invoiceNumber;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     Date dateOfIssue = null;
 
-    @NotNull(message = "Invoice city is blank")
+    //    @NotNull(message = "Invoice city is blank")
     @Size(max = 100, message = "Invoice city max size 100")
     String city;
 
@@ -38,7 +41,7 @@ public class Invoice {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     Date paymentDate = null;
 
-    @NotNull(message = "Invoice paying method is blank")
+    //    @NotNull(message = "Invoice paying method is blank")
     PayingMethods payingMethod = null;
 
     Double totalPrice;
@@ -50,6 +53,15 @@ public class Invoice {
 //    Long buyerId = null;
 
     boolean isPayed = false;
+
+    @Transient
+    Long ContractorId;
+
+    @Transient
+    InvoicePositions position = new InvoicePositions();
+
+    @Transient
+    GoodsAndServices good = new GoodsAndServices();
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     Date seenDate = null;

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tworzenie faktury</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        body {
+            overflow-x: hidden;
+            background-color: azure;
+        }
+
+        body h4 {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .header {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            background: #ECECEC;
+        }
+
+        .header nav {
+            background: #ECECEC !important;
+        }
+
+        .header nav .nav-link {
+            margin-left: 40px;
+            font-weight: bold;
+            color: #747474 !important;
+        }
+
+        .header nav .activee {
+            text-decoration: none;
+            -webkit-transform: all .3s ease-in;
+            transform: all .3s ease-in;
+            color: #484FFF !important;
+        }
+
+        .create-invoice {
+            margin-top: 50px !important;
+        }
+
+        .create-invoice input[type=submit] {
+            background: #484FFF;
+            color: white;
+            padding: 8px 18px;
+            border: none;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .create-invoice .title h1 {
+            font-size: 28px;
+            font-weight: bold;
+            padding-bottom: 15px;
+        }
+
+        .create-invoice .title hr {
+            background: #484FFF;
+            width: 125px;
+            height: 2px;
+        }
+
+        .create-invoice .form-element {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        .create-invoice .form-element input[type=text], .create-invoice .form-element input[type=date], .create-invoice .form-element select {
+            border: 1px solid #b3b3b3;
+            padding-left: 3px;
+            width: 350px;
+        }
+
+        .create-invoice .counter input {
+            width: 25px !important;
+        }
+
+        .create-invoice .counter button {
+            background: #484FFF;
+            border: none;
+            color: white;
+            outline: none;
+        }
+
+        .create-invoice .border {
+            padding: 25px !important;
+        }
+
+        @media (min-width: 1361px) {
+            .navbar {
+                width: 1080px;
+            }
+
+            .create-invoice {
+                width: 1080px;
+                margin: 0 auto;
+            }
+
+            .create-invoice .title {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 1360px) {
+            .navbar {
+                max-width: 1080px;
+            }
+
+            input[type=text], input[type=date], select {
+                width: 150px !important;
+            }
+        }
+    </style>
+    <style>
+        .add-new {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            margin-top: 30px !important;
+        }
+    </style>
+    <style>
+        .table thead {
+            background: #484FFF;
+        }
+
+        .table thead th {
+            color: white;
+        }
+
+        .add-new {
+            border: none;
+            background-color: #484FFF;
+            color: white;
+            padding: 12px 16px;
+            font-size: 20px;
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div th:replace="fragments/header :: header"></div>
+</header>
+<main>
+    <section class="create-invoice">
+        <div class="container border">
+            <div class="row">
+                <div class="col-12 title">
+                    <h1>Utwórz fakturę</h1>
+                    <hr align="left"></hr>
+                </div>
+            </div>
+            <form method="POST" modelAttribute="invoice" th:object="${invoice}">
+                <div class="row ">
+                    <div class="col-12 col-lg-6 border-blue">
+                        <div class="form-element">
+                            <h4>Nr dokumentu</h4>
+                            <input type="text" th:field="*{invoiceNumber}">
+                        </div>
+                        <div class="form-element">
+                            <h4>Rodzaj płatności</h4>
+                            <select class="form-control form-control-sm" th:field="*{payingMethod}">
+                                <option th:each="method : ${payingMethods}"
+                                        th:value="${method}"
+                                        th:text="${method.name()}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-element">
+                            <h4>Nabywca</h4>
+                            <select class="form-control form-control-sm" th:field="*{contractorId}">
+                                <option th:each="contracotr : ${contractors}"
+                                        th:value="${contracotr.id}"
+                                        th:text="${contracotr.companyName}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 ">
+                        <div class="form-element">
+                            <h4>Data wystawienia</h4>
+                            <input type="date" th:field="*{dateOfIssue}">
+                        </div>
+                        <div class="form-element">
+                            <h4>Miejsce wystawienia</h4>
+                            <input type="text" th:field="*{city}">
+                        </div>
+                        <div class="form-element">
+                            <h4>Dta sprzedaży</h4>
+                            <input type="date" th:field="*{saleDate}">
+                        </div>
+                        <div class="form-element">
+                            <h4>Data płatności</h4>
+                            <input type="date" th:field="*{paymentDate}">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <table class="table table-sm" th:if="${positions} != null">
+                        <thead>
+                        <tr>
+                            <th scope="col">Nazwa towaru lub usługi</th>
+                            <th scope="col">Ilość</th>
+                            <th scope="col">Wartość</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="position : ${positions}">
+                            <td th:text="${position.goodsAndServices.name}"></td>
+                            <td th:text="${position.amount}"></td>
+                            <td th:text="${position.totalPrice}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h4>Dodaj pozycje</h4>
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Nazwa towaru lub usługi</th>
+                            <th scope="col">Ilość</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <select class="form-control form-control-sm" th:field="*{good}">
+                                    <option th:each="gd : ${goods}"
+                                            th:value="${gd.id}"
+                                            th:text="${gd.name}">
+                                    </option>
+                                </select>
+                            </td>
+                            <td><input type="number" th:field="*{position.amount}" min="1"/></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-primary btn-block btn-sm" type="submit" name="action" th:value="save+';'+*{id}"
+                        style="width: 150px; margin-top: 2%;background-color: #484FFF;color: white;">Dodaj
+                </button>
+                <button class="btn btn-primary btn-block btn-sm" type="submit" name="action" th:value="sum +';'+*{id}"
+                        style="width: 150px; margin-top: 2%;background-color: #484FFF;color: white;">Podsumowanie
+                </button>
+            </form>
+
+    </section>
+</main>
+<script>
+    var curLocation = location.href;
+    var menuItem = document.getElementsByClassName('nav-link');
+    var menuLength = menuItem.length;
+    for (let i = 0; i < menuLength; i++) {
+
+        if (menuItem[i].href === curLocation) {
+
+            menuItem[i].classList.add("activee");
+        }
+    }
+</script>
+</body>
+</html>

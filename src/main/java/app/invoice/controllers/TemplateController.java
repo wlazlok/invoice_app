@@ -175,82 +175,82 @@ public class TemplateController {
         return "login";
     }
 
-    @GetMapping("/invoice")
-    public String pdf(Model model) {
-        model.addAttribute("invoice", getInvoice());
+    @GetMapping("/invoice/{id}")
+    public String pdf(@PathVariable("id") String id, Model model) {
+        model.addAttribute("invoice", invoiceRepository.getById(Long.valueOf(id)));
         return "invoice";
     }
 
-    @RequestMapping(path = "/invoice/print")
-    public ResponseEntity<?> getPDF(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        Invoice invoice = getInvoice();
-
-        WebContext context = new WebContext(request, response, servletContext);
-        context.setVariable("invoice", invoice);
-
-        String orderHtml = templateEngine.process("invoice", context);
-        ByteArrayOutputStream target = new ByteArrayOutputStream();
-        ConverterProperties converterProperties = new ConverterProperties();
-        converterProperties.setBaseUri("http://localhost:8080");
-        HtmlConverter.convertToPdf(orderHtml, target, converterProperties);
-
-        byte[] bytes = target.toByteArray();
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=invoice-" + invoice.getInvoiceNumber() + ".pdf")
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(bytes);
-
-    }
-
-    @GetMapping("/invoice/create")
-    public String getCreateInvoiceView(Model model) {
-        List<PayingMethods> payingMethods = Arrays.asList(PayingMethods.values());
-        User user = userService.getUserById(1L);
-        List<GoodsAndServices> goods = new ArrayList<>();
-        goodsAndServicesRepository.findAll().forEach(goods::add);
-        model.addAttribute("goods", goods);
-//        model.addAttribute("positions", new ArrayList<Integer>());
-        model.addAttribute("contractors", user.getContractors());
-        model.addAttribute("payingMethod", payingMethods);
-        model.addAttribute("invoice", new Invoice());
-        return "invoiceCreate";
-    }
-
-    @RequestMapping(value = "/invoice/create", method = RequestMethod.POST)
-    public String createInvoice(@ModelAttribute Invoice invoice, @RequestParam(value = "action") String action, Model model) {
-        String[] actionTab = action.split(";");
-        if (actionTab[0].equals("save")) {
-            if (actionTab[1].equals("null")) {
-                System.out.println("NOWA");
-                Invoice saved = invoiceRepository.save(invoice);
-                System.out.println("ZAPISANA " + saved.getGoodsAndServices().size());
-                Invoice found = invoiceRepository.getById(saved.getId());
-                System.out.println("ZNALEZIONA " + found.getGoodsAndServices().size());
-                List<GoodsAndServices> goods = new ArrayList<>();
-                goodsAndServicesRepository.findAll().forEach(goods::add);
-                User user = userService.getUserById(1L);
-                model.addAttribute("goods", goods);
-                model.addAttribute("contractors", user.getContractors());
-                model.addAttribute("invoice", saved);
-                return "invoiceCreate";
-            } else {
-                System.out.println("UPDATE");
-                Invoice foundInvoice = invoiceRepository.getById(Long.valueOf(actionTab[1]));
-                System.out.println("FOUND: " + foundInvoice.getGoodsAndServices().size());
-                System.out.println("PORTAL: " + invoice.getGoodsAndServices().size());
-                List<GoodsAndServices> goods = new ArrayList<>();
-                goodsAndServicesRepository.findAll().forEach(goods::add);
-                User user = userService.getUserById(1L);
-                model.addAttribute("invoice", foundInvoice);
-                model.addAttribute("goods", goods);
-                model.addAttribute("contractors", user.getContractors());
-                return "invoiceCreate";
-            }
-        } else if (actionTab.equals("create")) {
-
-        }
+//    @RequestMapping(path = "/invoice/print")
+//    public ResponseEntity<?> getPDF(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//
+//        Invoice invoice = getInvoice();
+//
+//        WebContext context = new WebContext(request, response, servletContext);
+//        context.setVariable("invoice", invoice);
+//
+//        String orderHtml = templateEngine.process("invoice", context);
+//        ByteArrayOutputStream target = new ByteArrayOutputStream();
+//        ConverterProperties converterProperties = new ConverterProperties();
+//        converterProperties.setBaseUri("http://localhost:8080");
+//        HtmlConverter.convertToPdf(orderHtml, target, converterProperties);
+//
+//        byte[] bytes = target.toByteArray();
+//
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=invoice-" + invoice.getInvoiceNumber() + ".pdf")
+//                .contentType(MediaType.APPLICATION_PDF)
+//                .body(bytes);
+//
+//    }
+//
+//    @GetMapping("/invoice/create")
+//    public String getCreateInvoiceView(Model model) {
+//        List<PayingMethods> payingMethods = Arrays.asList(PayingMethods.values());
+//        User user = userService.getUserById(1L);
+//        List<GoodsAndServices> goods = new ArrayList<>();
+//        goodsAndServicesRepository.findAll().forEach(goods::add);
+//        model.addAttribute("goods", goods);
+////        model.addAttribute("positions", new ArrayList<Integer>());
+//        model.addAttribute("contractors", user.getContractors());
+//        model.addAttribute("payingMethod", payingMethods);
+//        model.addAttribute("invoice", new Invoice());
+//        return "invoiceCreate";
+//    }
+//
+//    @RequestMapping(value = "/invoice/create", method = RequestMethod.POST)
+//    public String createInvoice(@ModelAttribute Invoice invoice, @RequestParam(value = "action") String action, Model model) {
+//        String[] actionTab = action.split(";");
+//        if (actionTab[0].equals("save")) {
+//            if (actionTab[1].equals("null")) {
+//                System.out.println("NOWA");
+//                Invoice saved = invoiceRepository.save(invoice);
+//                System.out.println("ZAPISANA " + saved.getGoodsAndServices().size());
+//                Invoice found = invoiceRepository.getById(saved.getId());
+//                System.out.println("ZNALEZIONA " + found.getGoodsAndServices().size());
+//                List<GoodsAndServices> goods = new ArrayList<>();
+//                goodsAndServicesRepository.findAll().forEach(goods::add);
+//                User user = userService.getUserById(1L);
+//                model.addAttribute("goods", goods);
+//                model.addAttribute("contractors", user.getContractors());
+//                model.addAttribute("invoice", saved);
+//                return "invoiceCreate";
+//            } else {
+//                System.out.println("UPDATE");
+//                Invoice foundInvoice = invoiceRepository.getById(Long.valueOf(actionTab[1]));
+//                System.out.println("FOUND: " + foundInvoice.getGoodsAndServices().size());
+//                System.out.println("PORTAL: " + invoice.getGoodsAndServices().size());
+//                List<GoodsAndServices> goods = new ArrayList<>();
+//                goodsAndServicesRepository.findAll().forEach(goods::add);
+//                User user = userService.getUserById(1L);
+//                model.addAttribute("invoice", foundInvoice);
+//                model.addAttribute("goods", goods);
+//                model.addAttribute("contractors", user.getContractors());
+//                return "invoiceCreate";
+//            }
+//        } else if (actionTab.equals("create")) {
+//
+//        }
 //        if (action.equals("save")) {
 //            User user = userService.getUserById(1L);
 //            List<GoodsAndServices> goods = new ArrayList<>();
@@ -266,7 +266,7 @@ public class TemplateController {
 //            System.out.println("ES");
 //        }
 //        return "login";
-
-        return null;
-    }
+//
+//        return null;
+//    }
 }

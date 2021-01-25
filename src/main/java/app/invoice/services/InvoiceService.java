@@ -1,10 +1,8 @@
 package app.invoice.services;
 
-import app.invoice.models.Contractor;
-import app.invoice.models.Invoice;
-import app.invoice.models.PayingMethods;
-import app.invoice.models.User;
+import app.invoice.models.*;
 import app.invoice.repositories.ContractorRepository;
+import app.invoice.repositories.InvoicePositionRepository;
 import app.invoice.repositories.InvoiceRepository;
 import app.invoice.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +12,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -30,34 +25,40 @@ public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final UserRepository userRepository;
     private final ContractorRepository contractorRepository;
+    private final InvoicePositionRepository invoicePositionRepository;
 
-    public InvoiceService(InvoiceRepository invoiceRepository, UserRepository userRepository, ContractorRepository contractorRepository) {
+    public InvoiceService(InvoiceRepository invoiceRepository, UserRepository userRepository, ContractorRepository contractorRepository, InvoicePositionRepository invoicePositionRepository) {
         this.invoiceRepository = invoiceRepository;
         this.userRepository = userRepository;
         this.contractorRepository = contractorRepository;
+        this.invoicePositionRepository = invoicePositionRepository;
     }
 
-    public Invoice createInvoice(Invoice invoice, Long buyerId, Long dealerId) throws Exception {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        PayingMethods payingMethod = PayingMethods.valueOf(String.valueOf(invoice.getPayingMethod()));
+    public Invoice createInvoice(Invoice invoice, User user) {
+        //todo dopisanie logiki walidacje itp ? moze do controllera? + lapanie bledow itp
+        invoice.setContractor(contractorRepository.getById(invoice.getContractorId()));
+        invoice.setUser(user);
+        Invoice saved = invoiceRepository.save(invoice);
+        invoice.getPosition().setGoodsAndServices(invoice.getGood());
+        invoice.getPosition().setTotalPrice(invoice.getPosition().getGoodsAndServices().getPrice() * invoice.getPosition().getAmount());
+        invoice.getPosition().setInvoice(saved);
+        InvoicePositions savedPosition = invoicePositionRepository.save(invoice.getPosition());
+        saved.getInvoicePositions().add(savedPosition);
+        double suma = saved.getInvoicePositions().stream().mapToDouble(InvoicePositions::getTotalPrice).sum();
+        saved.setTotalPrice(suma);
+        return invoiceRepository.save(saved);
+    }
 
-        User foundUser = getUserById(dealerId);
-        Contractor foundContractor = getContractorById(buyerId);
-
-//        invoice.setBuyerId(buyerId);
-//        invoice.setDealerId(dealerId);
-        invoice.setPayingMethod(payingMethod);
-
-        //tymczasowo ustawione defualtowo daty
-        invoice.setDateOfIssue(date);
-        invoice.setPaymentDate(date);
-        invoice.setSeenDate(date);
-
-        Invoice savedInvoice = invoiceRepository.save(invoice);
-        //czy user, lub contractor ma miec liste faktur?
-
-        return invoiceRepository.save(invoice);
+    public Invoice updateInvoice(Long invoiceId, Invoice invoice) {
+        Invoice foundInvoice = invoiceRepository.getById(Long.valueOf(invoiceId));
+        invoice.getPosition().setGoodsAndServices(invoice.getGood());
+        invoice.getPosition().setTotalPrice(invoice.getPosition().getGoodsAndServices().getPrice() * invoice.getPosition().getAmount());
+        invoice.getPosition().setInvoice(foundInvoice);
+        InvoicePositions savedPosition = invoicePositionRepository.save(invoice.getPosition());
+        foundInvoice.getInvoicePositions().add(savedPosition);
+        double suma = foundInvoice.getInvoicePositions().stream().mapToDouble(InvoicePositions::getTotalPrice).sum();
+        foundInvoice.setTotalPrice(suma);
+        return invoiceRepository.save(foundInvoice);
     }
 
     public List<String> validateInvoice(Invoice invoice) {
@@ -74,15 +75,6 @@ public class InvoiceService {
         }
         log.info("Invoice validation passed");
         return Arrays.asList();
-    }
-
-    public User getUserById(Long id) throws Exception {
-        User foundUser = userRepository.getById(id);
-
-        if (foundUser == null) {
-            throw new Exception("User not found in database");
-        }
-        return foundUser;
     }
 
     public Contractor getContractorById(Long id) throws Exception {
@@ -129,15 +121,5 @@ public class InvoiceService {
         }
 
         return savedInvoice;
-    }
-
-    public void deleteInvoice(Long invoiceId) throws Exception {
-        Invoice invoice = invoiceRepository.getById(invoiceId);
-
-        if (invoice == null) {
-            throw new Exception("Invoice not found in database");
-        }
-
-        invoiceRepository.deleteById(invoice.getId());
     }
 }
