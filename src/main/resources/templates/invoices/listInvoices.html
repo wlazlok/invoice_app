@@ -172,7 +172,7 @@
             <tr th:each="invoice : ${invoices}">
                 <th scope="row" th:text="${invoice.id}"></th>
                 <td th:text="${invoice.invoiceNumber}"></td>
-                <td th:text="${invoice.dateOfIssue}"></td>
+                <td th:text="${invoice.getDateOfIssue()}"></td>
                 <td th:text="${invoice.totalPrice}"></td>
                 <td>
                     <a th:href="'/invoice/' + ${invoice.id}">

@@ -46,12 +46,6 @@ public class Invoice {
 
     Double totalPrice;
 
-    //@NotNull(message = "Invoice dealer is blank")
-//    Long dealerId = null;
-
-    //@NotNull(message = "Invoice buyer is blank")
-//    Long buyerId = null;
-
     boolean isPayed = false;
 
     @Transient
@@ -74,11 +68,6 @@ public class Invoice {
     @JoinColumn(name = "contractor_id", referencedColumnName = "id")
     Contractor contractor;
 
-    //    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "invoice", fetch = FetchType.EAGER)
-//    @Fetch(value = FetchMode.SUBSELECT)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
     List<InvoicePositions>  invoicePositions = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "invoice", fetch = FetchType.LAZY)
-    List<GoodsAndServices> goodsAndServices;
 }
