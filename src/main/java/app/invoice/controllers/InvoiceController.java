@@ -1,43 +1,59 @@
 package app.invoice.controllers;
 
 import app.invoice.models.Invoice;
-import app.invoice.models.InvoicePositions;
 import app.invoice.models.PayingMethods;
 import app.invoice.models.User;
-import app.invoice.repositories.ContractorRepository;
-import app.invoice.repositories.GoodsAndServicesRepository;
-import app.invoice.repositories.InvoicePositionRepository;
 import app.invoice.repositories.InvoiceRepository;
 import app.invoice.services.InvoiceService;
 import app.invoice.services.UserService;
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Controller
 @RequestMapping("/invoice")
 public class InvoiceController {
 
+    @Autowired
+    ServletContext servletContext;
+
     private final InvoiceService invoiceService;
     private final UserService userService;
     private final InvoiceRepository invoiceRepository;
-    private final InvoicePositionRepository invoicePositionRepository;
-    private final ContractorRepository contractorRepository;
+    private final TemplateEngine templateEngine;
 
-    public InvoiceController(InvoiceService invoiceService, UserService userService, InvoiceRepository invoiceRepository, GoodsAndServicesRepository goodsAndServicesRepository, InvoicePositionRepository invoicePositionRepository, ContractorRepository contractorRepository) {
+    public InvoiceController(InvoiceService invoiceService, UserService userService, InvoiceRepository invoiceRepository, TemplateEngine templateEngine) {
         this.invoiceService = invoiceService;
         this.userService = userService;
         this.invoiceRepository = invoiceRepository;
-        this.invoicePositionRepository = invoicePositionRepository;
-        this.contractorRepository = contractorRepository;
+        this.templateEngine = templateEngine;
+    }
+
+    @GetMapping()
+    public String getListInvoicesView(Model model) {
+        List<Invoice> invoices = userService.getAllInvoices();
+        model.addAttribute("invoices", invoices);
+
+        return "invoices/listInvoices";
     }
 
     @GetMapping("/create")
@@ -81,21 +97,33 @@ public class InvoiceController {
             model.addAttribute("contractors", contextUser.getContractors());
             return "invoices/createInvoice";
         }
-        //1. zapisz fakture
-        //2. zapisz pozycje i dopisz do faktury
-        //3. aktualizuj fakture
+    }
+    @GetMapping("/{id}")
+    public String pdf(@PathVariable("id") String id, Model model) {
+        //todo trzeba inacej cos ywsmylic bo zle jest wypisywane total price
+        model.addAttribute("invoice", invoiceRepository.getById(Long.valueOf(id)));
+        return "invoices/showInvoice";
     }
 
-//    @PostMapping("/delete")
-//    public ResponseEntity<String> deleteInvoice(@RequestParam("id") String id) {
-//
-//        try {
-//            invoiceService.deleteInvoice(Long.valueOf(id));
-//        } catch (Exception ex) {
-//            log.info("Error during deleting invoice: " + ex.getMessage());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-//        }
-//        log.info("Invoice deleted");
-//        return ResponseEntity.ok("Invoice deleted");
-//    }
+    @RequestMapping(path = "/print/{id}")
+    public ResponseEntity<?> getPDF(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //todo obsluga bledow itp
+        Invoice invoice = invoiceService.getInvoiceById(Long.valueOf(id));
+
+        WebContext context = new WebContext(request, response, servletContext);
+        context.setVariable("invoice", invoice);
+
+        String orderHtml = templateEngine.process("invoice", context);
+        ByteArrayOutputStream target = new ByteArrayOutputStream();
+        ConverterProperties converterProperties = new ConverterProperties();
+        converterProperties.setBaseUri("http://localhost:8080");
+        HtmlConverter.convertToPdf(orderHtml, target, converterProperties);
+
+        byte[] bytes = target.toByteArray();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=invoice-" + invoice.getInvoiceNumber() + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(bytes);
+    }
 }

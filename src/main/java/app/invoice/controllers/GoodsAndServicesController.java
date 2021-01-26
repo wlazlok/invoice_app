@@ -5,12 +5,11 @@ import app.invoice.models.User;
 import app.invoice.services.GoodsAndServicesService;
 import app.invoice.services.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.math.raw.Mod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -95,53 +94,4 @@ public class GoodsAndServicesController {
         //todo komunikat o sukcesie
         return "redirect:/user/goods";
     }
-
-//    @PostMapping("/edit")
-//    public ResponseEntity<List<String>> editGoodsAndServices(@RequestBody @Valid GoodsAndServices goodsAndServices,
-//                                                             @RequestParam("id") String id) {
-//        //możliwość edycji: name, price, unit
-//        try {
-//            goodsAndServicesService.editGoodsAndServices(goodsAndServices, Long.valueOf(id));
-//        } catch (Exception ex) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Arrays.asList(ex.getMessage()));
-//        }
-//
-//        return ResponseEntity.ok(Arrays.asList("GoodsAndServices updated!"));
-//    }
-
-//    @PostMapping("/create")
-//    public ResponseEntity<List<String>> createGoodsAndServices(@RequestBody GoodsAndServices goodsAndServices,
-//                                                               @RequestParam("id") String userId) {
-//        List<String> errors = Arrays.asList();
-//        try {
-//            errors = goodsAndServicesService.validateGoodsAndServices(goodsAndServices);
-//
-//            if (!errors.isEmpty()) {
-//                log.info("Error during goodAndServices validation");
-//                throw new Exception("Goods and services not valid");
-//            }
-//            goodsAndServicesService.createGoodsAndServices(goodsAndServices, Long.valueOf(userId));
-//            log.info("GoodsAndServices created");
-//        } catch (Exception ex) {
-//            if (!errors.isEmpty()) {
-//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errors);
-//            }
-//            log.info("Error during creating GoodsAndServices: " + ex.getMessage());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Arrays.asList(ex.getMessage()));
-//        }
-//        return ResponseEntity.ok(Arrays.asList("GoodsAndServices created!"));
-//    }
-//
-//
-//    @PostMapping("/delete")
-//    public ResponseEntity<String> deleteGoodsAndServices(@RequestParam("id") String id) {
-//        try {
-//            goodsAndServicesService.deleteGoodsAndServices(Long.valueOf(id));
-//        } catch (Exception ex) {
-//            log.info("Error during deleting goodsAndServices: " + ex.getMessage());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-//        }
-//
-//        return ResponseEntity.ok("Goods And Services deleted successfully");
-//    }
 }

@@ -122,4 +122,9 @@ public class InvoiceService {
 
         return savedInvoice;
     }
+
+    public Invoice getInvoiceById(Long id) {
+        //todo obsluga bledow itp
+        return invoiceRepository.getById(id);
+    }
 }

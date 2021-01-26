@@ -2,6 +2,7 @@ package app.invoice.services;
 
 import app.invoice.configuration.ResourceBundleProperties;
 import app.invoice.models.ChangeUserPasswordForm;
+import app.invoice.models.Invoice;
 import app.invoice.models.ResetPasswordForm;
 import app.invoice.models.User;
 import app.invoice.repositories.UserRepository;
@@ -120,7 +121,7 @@ public class UserService {
 
     public User findUserByUserName(String userName) throws Exception {
         User userFound = userRepository.getByUsername(userName);
-        if(userFound != null) {
+        if (userFound != null) {
             log.info("User found in DB");
             return userFound;
         }
@@ -159,8 +160,8 @@ public class UserService {
         byte[] encodedUserName = Base64.getEncoder().encode(userName.getBytes());
         byte[] encodedTempPassword = Base64.getEncoder().encode(tempPass.getBytes());
         //todo change link when front ready
-        return "http://localhost:8080/reset/password?user="+new String(encodedUserName, StandardCharsets.UTF_8)+
-                "&pass="+new String(encodedTempPassword, StandardCharsets.UTF_8);
+        return "http://localhost:8080/reset/password?user=" + new String(encodedUserName, StandardCharsets.UTF_8) +
+                "&pass=" + new String(encodedTempPassword, StandardCharsets.UTF_8);
     }
 
     public String createTempPassword() {
@@ -208,5 +209,10 @@ public class UserService {
             log.info("userService.getUserFromContext.userNotFound");
             return null;
         }
+    }
+
+    public List<Invoice> getAllInvoices() {
+        //todo obsluga bledow itp
+        return getUserFromContext().getInvoices();
     }
 }
