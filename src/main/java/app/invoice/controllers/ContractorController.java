@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -35,18 +35,19 @@ public class ContractorController {
     public String createContractor(@ModelAttribute("contractor") Contractor contractor, Model model) {
         List<String> isValid = contractorService.validateContractor(contractor);
         if (!isValid.isEmpty()) {
-            //todo dodac błedy walidacji na front
+            model.addAttribute("error", isValid);
             return "contractor/add-contractor";
         }
         try {
             User user = userService.getUserFromContext();
             contractorService.createContractor(contractor, user.getId());
         } catch (Exception e) {
-            //todo bledy z e.getMessage na front
             log.info("contractorController.catch.errors" + " " + e.getMessage());
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("contractor", contractor);
+            return "contractor/add-contractor";
         }
         log.info("contractorController.contractor.crated");
-        //todo inne przekierowanie
         return "redirect:/user/contractors";
     }
 

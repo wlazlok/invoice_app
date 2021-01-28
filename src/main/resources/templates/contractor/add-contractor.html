@@ -159,6 +159,8 @@
         </div>
         <form method="POST" modelAttribute="contractor" th:object="${contractor}" class="form-signin">
             <div class="form-element">
+                <div class="alert alert-danger" role="alert" th:if="${error} != null" th:each="err : ${error}" th:text="${err}">
+                </div>
                 <h4>Nazwa</h4>
                 <input type="text" th:field="*{companyName}" id="companyName">
                 <div class="alert alert-danger" style="display: none; width: 350px; margin-top: 1%"
@@ -203,7 +205,7 @@
                 </div>
             </div>
             <button class="btn btn-primary btn-block btn-sm" type="submit" id="buttonAdd"
-                    style="width: 150px; margin-top: 2%;background-color: #484FFF;color: white;" disabled>Dodaj
+                    style="width: 150px; margin-top: 2%;background-color: #484FFF;color: white;" >Dodaj
             </button>
         </form>
     </section>

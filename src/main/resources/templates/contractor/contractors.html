@@ -154,6 +154,8 @@
 </header>
 <main>
     <section class="create-invoice">
+        <div class="alert alert-success" role="alert" th:if="${success} != null" th:text="${success}">
+        </div>
         <div class="title">
             <h1>Kontrahenci</h1>
             <hr align="left"></hr>

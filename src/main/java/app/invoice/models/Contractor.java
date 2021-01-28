@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.*;
@@ -21,34 +22,34 @@ public class Contractor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotNull(message = "Contractor email is blank")
+    @NotBlank(message = "Pole email nie może być puste")
     @Column(name = "email")
     //regex
     String email;
 
-    @NotNull(message = "Contractor NIP is blank")
+    @NotBlank(message = "Pole NIP nie może być puste")
     @Column(name = "nip")
-    @Size(min = 10, max = 10, message = "Contractor nip size 10")
+    @Size(min = 10, max = 10, message = "Rozmiar pola NIP: 10 znaków")
     String nip;
 
-    @NotNull(message = "Contractor company name is blank")
+    @NotBlank(message = "Pole nazwa firmy nie może być puste")
     @Column(name = "company_name")
-    @Size(max = 50, message = "Contractor company name max size 50")
+    @Size(max = 50, message = "Rozmiar pola nazwa firmy: 50 znaków")
     String companyName;
 
-    @NotNull(message = "Contractor street is blank")
+    @NotBlank(message = "Pole ulica nie może być puste")
     @Column(name = "street")
-    @Size(max = 50, message = "Contractor street max size 50")
+    @Size(max = 50, message = "Rozmiar pola ulica: 50 znaków")
     String street;
 
-    @NotNull(message = "Contractor postal code is blank")
+    @NotBlank(message = "Pole kod pocztowy nie może być puste")
     @Column(name = "postal_code")
-    @Size(max = 10, message = "Contractor postal code max size 10")
+    @Size(max = 10, message = "Rozmiar pola kod pocztowy: 10 znaków")
     String postalCode;
 
-    @NotNull(message = "Contractor city is blank")
+    @NotBlank(message = "Pole miasto nie może być puste")
     @Column(name = "city")
-    @Size(max = 100, message = "Contractor city max size 100")
+    @Size(max = 100, message = "Rozmiar pola miasto: 100 znaków")
     String city;
 
     @ManyToOne
