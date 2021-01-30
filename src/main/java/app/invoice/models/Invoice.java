@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.*;
@@ -24,31 +25,35 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    //    @NotNull(message = "Invoice invoice number is blank")
-    @Size(max = 10, message = "Invoice invoice number max size 10")
+    @NotBlank(message = "Proszę podać numer faktury")
+    @Size(max = 10, message = "Maksymalna długość pola numer faktury: 10 znaków")
     String invoiceNumber;
 
+    @NotNull(message = "Proszę podać datę wystawienia")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    Date dateOfIssue = null;
+    Date dateOfIssue;
 
-    //    @NotNull(message = "Invoice city is blank")
-    @Size(max = 100, message = "Invoice city max size 100")
+    @NotBlank(message = "Proszę podać miejsce wystawienia")
+    @Size(max = 100, message = "IMaksymalan długość pola miejsce wystawienia: 100 znaków")
     String city;
 
+    @NotNull(message = "Proszę podać datę sprzedaży")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    Date saleDate = null;
+    Date saleDate;
 
+    @NotNull(message = "Proszę podać datę płatności")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    Date paymentDate = null;
+    Date paymentDate;
 
-    //    @NotNull(message = "Invoice paying method is blank")
-    PayingMethods payingMethod = null;
+    @NotNull(message = "Proszę wybrać sposób płatności")
+    PayingMethods payingMethod;
 
     Double totalPrice;
 
     boolean isPayed = false;
 
     @Transient
+//    @NotNull(message = "Proszę wybrać nabywcę")
     Long ContractorId;
 
     @Transient

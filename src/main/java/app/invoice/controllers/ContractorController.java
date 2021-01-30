@@ -58,7 +58,6 @@ public class ContractorController {
             contractor = contractorService.getContractorById(Long.valueOf(id));
         } catch (Exception e) {
             log.info("contractorController.edit.contractor.not.found " + e.getMessage());
-            //todo moze byc przekierowanie na liste kntrahentow + tam error ze nie ma takiego
             return "redirect:/user/contractors";
         }
         model.addAttribute("contractor", contractor);
@@ -71,12 +70,12 @@ public class ContractorController {
         try {
             contractorService.editContractor(contractor, Long.valueOf(id));
         } catch (Exception e) {
-            //todo wpisanie nafrnt wyajtku
+            //todo wpisanie na fornt bledu
             log.info("contractorController.edit.catch.errror " + e.getMessage());
             model.addAttribute("contractor", contractor);
             return "contractor/add-contractor";
         }
-        log.info("contractorController.edit.succesfull");
+        log.info("contractorController.edit.successfully");
         return "redirect:/user/contractors";
     }
 
@@ -89,8 +88,7 @@ public class ContractorController {
             log.info("contractorController.delete.catch.error " + e.getMessage());
             return "redirect:/user/contractors";
         }
-        log.info("contractorController.delete.succesfull");
-        //todo wypisanie komunikatu o sukcesie
+        log.info("contractorController.delete.successfully");
         return "redirect:/user/contractors";
     }
 }

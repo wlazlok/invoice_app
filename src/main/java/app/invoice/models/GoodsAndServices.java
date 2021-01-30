@@ -8,6 +8,7 @@ import org.hibernate.annotations.FetchMode;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.*;
@@ -23,18 +24,18 @@ public class GoodsAndServices {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotNull(message = "GoodsAndServices name is null")
+    @NotBlank(message = "Proszę podać nazwę")
     @Column(name = "name")
-    @Size(max = 50, message = "GoodsAndServices name max size 50")
+    @Size(max = 50, message = "Maksymalna długość pola: 50 znaków")
     String name;
 
-    @NotNull(message = "GoodsAndServices price is blank")
+    @NotNull(message = "Proszę podać cenę")
     @Column(name = "price")
     Double price;
 
-    @NotNull(message = "GoodsAndServices unit is blank")
+    @NotBlank(message = "Prosze podać jednostkę")
     @Column(name = "unit")
-    @Size(max = 20, message = "GoodsAndServices unit max size 20")
+    @Size(max = 20, message = "Maksymalna długość jednostki: 20 znaków")
     String unit;
 
     @ManyToOne

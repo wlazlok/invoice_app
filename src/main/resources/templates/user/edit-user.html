@@ -157,6 +157,8 @@
             <h1>Edytuj użytkownika</h1>
             <hr align="left"></hr>
         </div>
+        <div class="alert alert-danger" role="alert" th:if="${error} != null" th:each="err : ${error}" th:text="${err}">
+        </div>
         <form method="POST" modelAttribute="user" th:object="${user}" class="form-signin">
             <div class="form-element">
                 <h4>Nazwa uzytkownika</h4>

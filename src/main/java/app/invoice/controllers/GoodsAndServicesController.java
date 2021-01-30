@@ -34,8 +34,8 @@ public class GoodsAndServicesController {
     public String createGood(@ModelAttribute("good") GoodsAndServices good, Model model) {
         List<String> errors = goodsAndServicesService.validateGoodsAndServices(good);
         if (!errors.isEmpty()) {
-            //todo wypisanie errorw na strone
             log.info("GoodsAndServicesController.validation.errors" + errors.size());
+            model.addAttribute("error", errors);
             model.addAttribute("good", good);
             return "goods/add-good";
         }
@@ -45,10 +45,11 @@ public class GoodsAndServicesController {
             goodsAndServicesService.createGoodsAndServices(good, user.getId());
         } catch (Exception e) {
             log.info("GoodsAndServicesController.catch.errors " + e.getMessage());
+            model.addAttribute("error", e.getMessage());
             model.addAttribute("good", good);
             return "goods/add-good";
         }
-        log.info("GoodsAndServicesController.good.crated.succesfully");
+        log.info("GoodsAndServicesController.good.created.successfully");
         return "redirect:/user/goods";
     }
 
@@ -67,16 +68,22 @@ public class GoodsAndServicesController {
 
     @PostMapping("/edit/{goodId}")
     public String editGood(@PathVariable("goodId") String id, @ModelAttribute("good") GoodsAndServices goodsAndServices, Model model) {
-
+        List<String> errors = goodsAndServicesService.validateGoodsAndServices(goodsAndServices);
+        if (!errors.isEmpty()) {
+            log.info("GoodsAndServicesController.validation.errors" + errors.size());
+            model.addAttribute("error", errors);
+            model.addAttribute("good", goodsAndServices);
+            return "goods/add-good";
+        }
         try {
             goodsAndServicesService.editGoodsAndServices(goodsAndServices, Long.valueOf(id));
         } catch (Exception e) {
             log.info("GoodsAndServicesController.update.catch.error " + e.getMessage());
+            model.addAttribute("error", e.getMessage());
             model.addAttribute("good", goodsAndServices);
-            //todo komunikat o bledzie
             return "goods/add-good";
         }
-        log.info("GoodsAndServicesController.updated.succesfull");
+        log.info("GoodsAndServicesController.updated.successfully");
         //todo komunikat o sukcecei
         return "redirect:/user/goods";
     }
@@ -90,7 +97,7 @@ public class GoodsAndServicesController {
             //todo komunikat o bledzie
             return "redirect:/user/goods";
         }
-        log.info("GoodsAndServicesController.delete.succesfull");
+        log.info("GoodsAndServicesController.delete.successfully");
         //todo komunikat o sukcesie
         return "redirect:/user/goods";
     }

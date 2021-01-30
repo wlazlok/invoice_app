@@ -162,6 +162,8 @@
                     <hr align="left"></hr>
                 </div>
             </div>
+            <div class="alert alert-danger" role="alert" th:if="${error} != null" th:each="err : ${error}" th:text="${err}">
+            </div>
             <form method="POST" modelAttribute="invoice" th:object="${invoice}">
                 <div class="row ">
                     <div class="col-12 col-lg-6 border-blue">
@@ -172,6 +174,7 @@
                         <div class="form-element">
                             <h4>Rodzaj płatności</h4>
                             <select class="form-control form-control-sm" th:field="*{payingMethod}">
+                                <option th:value="null" ></option>
                                 <option th:each="method : ${payingMethods}"
                                         th:value="${method}"
                                         th:text="${method.name()}">
@@ -181,6 +184,7 @@
                         <div class="form-element">
                             <h4>Nabywca</h4>
                             <select class="form-control form-control-sm" th:field="*{contractorId}">
+                                <option th:value="null"></option>
                                 <option th:each="contracotr : ${contractors}"
                                         th:value="${contracotr.id}"
                                         th:text="${contracotr.companyName}">
@@ -238,13 +242,14 @@
                         <tr>
                             <td>
                                 <select class="form-control form-control-sm" th:field="*{good}">
+                                    <option th:value="null"></option>
                                     <option th:each="gd : ${goods}"
                                             th:value="${gd.id}"
                                             th:text="${gd.name}">
                                     </option>
                                 </select>
                             </td>
-                            <td><input type="number" th:field="*{position.amount}" min="0"/></td>
+                            <td><input type="number" th:field="*{position.amount}" min="0" th:default="0"/></td>
                         </tr>
                         </tbody>
                     </table>

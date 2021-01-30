@@ -158,6 +158,8 @@
             <h1>Dodaj towar</h1>
             <hr align="left"></hr>
         </div>
+        <div class="alert alert-danger" role="alert" th:if="${error} != null" th:each="err : ${error}" th:text="${err}">
+        </div>
         <form method="POST" modelAttribute="good" th:object="${good}" class="form-signin">
             <div class="form-element">
                 <h4>Nazwa</h4>
@@ -181,77 +183,77 @@
                 </div>
             </div>
             <button class="btn btn-primary btn-block btn-sm" type="submit" id="buttonAdd"
-                    style="width: 150px; margin-top: 2%;background-color: #484FFF;color: white;" disabled>Dodaj
+                    style="width: 150px; margin-top: 2%;background-color: #484FFF;color: white;" >Dodaj
             </button>
         </form>
     </section>
 </main>
-<script>
-    const name = document.querySelector('#name');
-    const nameError = document.querySelector('#nameError');
-    const price = document.querySelector('#price');
-    const priceError = document.querySelector('#priceError');
-    const unit = document.querySelector('#unit');
-    const unitError = document.querySelector('#unitError');
-    const addButton = document.querySelector('#buttonAdd');
+<!--<script>-->
+<!--    const name = document.querySelector('#name');-->
+<!--    const nameError = document.querySelector('#nameError');-->
+<!--    const price = document.querySelector('#price');-->
+<!--    const priceError = document.querySelector('#priceError');-->
+<!--    const unit = document.querySelector('#unit');-->
+<!--    const unitError = document.querySelector('#unitError');-->
+<!--    const addButton = document.querySelector('#buttonAdd');-->
 
-    const status = {
-        nameSatus: false,
-        priceStatus: false,
-        unitStatus: false
-    }
+<!--    const status = {-->
+<!--        nameSatus: false,-->
+<!--        priceStatus: false,-->
+<!--        unitStatus: false-->
+<!--    }-->
 
-    const displayError = function (field, errorField) {
-        errorField.style.display = 'block';
-        field.style.border = 'solid red';
-    }
-    const hideError = function (field, errorField) {
-        errorField.style.display = 'none';
-        field.style.border = '1px solid #b3b3b3';
-    }
+<!--    const displayError = function (field, errorField) {-->
+<!--        errorField.style.display = 'block';-->
+<!--        field.style.border = 'solid red';-->
+<!--    }-->
+<!--    const hideError = function (field, errorField) {-->
+<!--        errorField.style.display = 'none';-->
+<!--        field.style.border = '1px solid #b3b3b3';-->
+<!--    }-->
 
-    const enableAddButton = function (status) {
-        let isValid = true;
-        Object.values(status).forEach(function (val, i) {
-            if (!val) isValid = false;
-        })
-        addButton.disabled = !isValid;
-    }
-    name.addEventListener('focusout', function (event) {
-        event.preventDefault();
-        if (name.value === '') {
-            displayError(name, nameError);
-            status.nameSatus = false;
-        } else {
-            hideError(name, nameError);
-            status.nameSatus = true;
-        }
-        enableAddButton(status);
-    })
-    price.addEventListener('focusout', function (event) {
-        event.preventDefault();
-        if (price.value === '') {
-            displayError(price, priceError);
-            status.priceStatus = false;
-        } else {
-            hideError(price, priceError);
-            status.priceStatus = true;
-        }
-        enableAddButton(status);
-    })
-    unit.addEventListener('focusout', function (event) {
-        event.preventDefault();
-        if (unit.value === '') {
-            displayError(unit, unitError);
-            status.unitStatus = false;
-        } else {
-            hideError(unit, unitError);
-            status.unitStatus = true;
-        }
-        enableAddButton(status);
-    })
+<!--    const enableAddButton = function (status) {-->
+<!--        let isValid = true;-->
+<!--        Object.values(status).forEach(function (val, i) {-->
+<!--            if (!val) isValid = false;-->
+<!--        })-->
+<!--        addButton.disabled = !isValid;-->
+<!--    }-->
+<!--    name.addEventListener('focusout', function (event) {-->
+<!--        event.preventDefault();-->
+<!--        if (name.value === '') {-->
+<!--            displayError(name, nameError);-->
+<!--            status.nameSatus = false;-->
+<!--        } else {-->
+<!--            hideError(name, nameError);-->
+<!--            status.nameSatus = true;-->
+<!--        }-->
+<!--        enableAddButton(status);-->
+<!--    })-->
+<!--    price.addEventListener('focusout', function (event) {-->
+<!--        event.preventDefault();-->
+<!--        if (price.value === '') {-->
+<!--            displayError(price, priceError);-->
+<!--            status.priceStatus = false;-->
+<!--        } else {-->
+<!--            hideError(price, priceError);-->
+<!--            status.priceStatus = true;-->
+<!--        }-->
+<!--        enableAddButton(status);-->
+<!--    })-->
+<!--    unit.addEventListener('focusout', function (event) {-->
+<!--        event.preventDefault();-->
+<!--        if (unit.value === '') {-->
+<!--            displayError(unit, unitError);-->
+<!--            status.unitStatus = false;-->
+<!--        } else {-->
+<!--            hideError(unit, unitError);-->
+<!--            status.unitStatus = true;-->
+<!--        }-->
+<!--        enableAddButton(status);-->
+<!--    })-->
 
-</script>
+<!--</script>-->
 <script>
     var curLocation = location.href;
     var menuItem = document.getElementsByClassName('nav-link');

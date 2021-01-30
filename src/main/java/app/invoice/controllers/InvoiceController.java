@@ -71,36 +71,52 @@ public class InvoiceController {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public String createInvoice(@RequestParam(value = "action") String action, @ModelAttribute("invoice") Invoice invoice, Model model) {
         User contextUser = userService.getUserFromContext();
-        List<PayingMethods> mayingMethods = Arrays.asList(PayingMethods.values());
+        List<PayingMethods> payingMethods = Arrays.asList(PayingMethods.values());
         String[] actionTab = action.split(";");
         //podsumowanie
         if (actionTab[0].equals("sum")) {
-            System.out.println("Printuje ");
             return "redirect:/invoice/" + actionTab[1];
         }
         else if (actionTab[1].equals("null")) {
             //zapis nowej
+            List<String> errors = invoiceService.validateInvoice(invoice);
+            if (!errors.isEmpty()) {
+                model.addAttribute("error", errors);
+                model.addAttribute("goods", contextUser.getGoodsAndServices());
+                model.addAttribute("invoice", invoice);
+                model.addAttribute("payingMethods", payingMethods);
+                model.addAttribute("contractors", contextUser.getContractors());
+                return "invoices/createInvoice";
+            }
             Invoice savedInvoice = invoiceService.createInvoice(invoice, contextUser);
             model.addAttribute("goods", contextUser.getGoodsAndServices());
             model.addAttribute("invoice", savedInvoice);
             model.addAttribute("positions", savedInvoice.getInvoicePositions());
-            model.addAttribute("payingMethods", mayingMethods);
+            model.addAttribute("payingMethods", payingMethods);
             model.addAttribute("contractors", contextUser.getContractors());
             return "invoices/createInvoice";
         } else {
             //update faktury
+            List<String> errors = invoiceService.validateInvoice(invoice);
+            if (!errors.isEmpty()) {
+                model.addAttribute("error", errors);
+                model.addAttribute("goods", contextUser.getGoodsAndServices());
+                model.addAttribute("invoice", invoice);
+                model.addAttribute("payingMethods", payingMethods);
+                model.addAttribute("contractors", contextUser.getContractors());
+                return "invoices/createInvoice";
+            }
             Invoice savedInvoice = invoiceService.updateInvoice(Long.valueOf(actionTab[1]), invoice);
             model.addAttribute("goods", contextUser.getGoodsAndServices());
             model.addAttribute("invoice", savedInvoice);
             model.addAttribute("positions", savedInvoice.getInvoicePositions().stream().distinct().collect(Collectors.toList()));
-            model.addAttribute("payingMethods", mayingMethods);
+            model.addAttribute("payingMethods", payingMethods);
             model.addAttribute("contractors", contextUser.getContractors());
             return "invoices/createInvoice";
         }
     }
     @GetMapping("/{id}")
     public String pdf(@PathVariable("id") String id, Model model) {
-        //todo trzeba inacej cos ywsmylic bo zle jest wypisywane total price
         model.addAttribute("invoice", invoiceRepository.getById(Long.valueOf(id)));
         return "invoices/showInvoice";
     }

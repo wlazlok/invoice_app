@@ -13,6 +13,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -44,20 +46,35 @@ public class InvoiceService {
         invoice.getPosition().setInvoice(saved);
         InvoicePositions savedPosition = invoicePositionRepository.save(invoice.getPosition());
         saved.getInvoicePositions().add(savedPosition);
-        double suma = saved.getInvoicePositions().stream().mapToDouble(InvoicePositions::getTotalPrice).sum();
+        double suma = 0;
+        List<InvoicePositions> positions = saved.getInvoicePositions().stream().distinct().collect(Collectors.toList());
+        for (InvoicePositions pos : positions) {
+            System.out.println("raz");
+            suma += pos.getTotalPrice();
+        }
         saved.setTotalPrice(suma);
+        saved.setTotalPrice(suma);
+        saved.setGood(null);
+        saved.setPosition(null);
         return invoiceRepository.save(saved);
     }
 
     public Invoice updateInvoice(Long invoiceId, Invoice invoice) {
-        Invoice foundInvoice = invoiceRepository.getById(Long.valueOf(invoiceId));
+        Invoice foundInvoice = invoiceRepository.getById(invoiceId);
         invoice.getPosition().setGoodsAndServices(invoice.getGood());
         invoice.getPosition().setTotalPrice(invoice.getPosition().getGoodsAndServices().getPrice() * invoice.getPosition().getAmount());
         invoice.getPosition().setInvoice(foundInvoice);
         InvoicePositions savedPosition = invoicePositionRepository.save(invoice.getPosition());
         foundInvoice.getInvoicePositions().add(savedPosition);
-        double suma = foundInvoice.getInvoicePositions().stream().mapToDouble(InvoicePositions::getTotalPrice).sum();
+        double suma = 0;
+        List<InvoicePositions> positions = foundInvoice.getInvoicePositions().stream().distinct().collect(Collectors.toList());
+        for (InvoicePositions pos : positions) {
+            System.out.println("raz");
+            suma += pos.getTotalPrice();
+        }
         foundInvoice.setTotalPrice(suma);
+        foundInvoice.setGood(null);
+        foundInvoice.setPosition(null);
         return invoiceRepository.save(foundInvoice);
     }
 

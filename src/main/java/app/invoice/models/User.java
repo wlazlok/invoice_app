@@ -34,18 +34,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotEmpty(message = "msg.err.user.email.is.empty")
+//    @NotEmpty(message = "Proszę podać email")
     @NotNull(message = "msg.err.user.email.is.null")
     @Column(name = "email")
-    //regex
     String email;
 
-    //    @NotNull(message = "User NIP is blank")
+//    @NotEmpty(message = "Proszę podać NIP")
     @Column(name = "nip")
-    @Size(min = 10, max = 10, message = "msg.err.user.nip.size.{min}-{max}")
+    @Size(min = 10, max = 10, message = "Długość pola NIP: 10 znaków")
     String nip;
 
-    //    @NotNull(message = "User company name is blank")
+//    @NotNull(message = "User company name is blank")
     @Column(name = "company_name")
     @Size(max = 100, message = "msg.err.user.companyname.max.size.{max}")
     String companyName;
@@ -70,7 +69,7 @@ public class User implements UserDetails {
     @Size(max = 60, message = "msg.err.user.bankaccountnumber.max.size.{max}")
     String bankAccountNumber = "123123123123123";
 
-    //    @Transient
+    @Transient
 //    @NotNull(message = "msg.err.user.confirmpassword.is.empty")
 //    @NotEmpty(message = "msg.err.user.confirmpassword.is.empty")
     String confirmPassword;
