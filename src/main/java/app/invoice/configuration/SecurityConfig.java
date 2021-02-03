@@ -36,6 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/login").permitAll()
                     .defaultSuccessUrl("/user/edit", true) //todo redirect na strone tutyłowa
                 .and()
+                .logout()
+                    .logoutSuccessUrl("/")
+                .and()
                 .cors().and().csrf().disable();
     }
 
