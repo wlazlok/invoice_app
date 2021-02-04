@@ -33,11 +33,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 .formLogin()
-                    .loginPage("/login").permitAll()
-                    .defaultSuccessUrl("/user/edit", true) //todo redirect na strone tutyłowa
+                .loginPage("/login").permitAll()
+                .defaultSuccessUrl("/user/edit", true) //todo redirect na strone tutyłowa
                 .and()
                 .logout()
-                    .logoutSuccessUrl("/")
+                .logoutSuccessUrl("/")
                 .and()
                 .cors().and().csrf().disable();
     }

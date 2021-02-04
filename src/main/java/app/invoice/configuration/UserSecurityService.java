@@ -1,5 +1,6 @@
 package app.invoice.configuration;
 
+import app.invoice.models.User;
 import app.invoice.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +18,10 @@ public class UserSecurityService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return userRepository.getByUsername(s);
+        User userFound = userRepository.getByUsername(s);
+        if (userFound == null) {
+            throw new UsernameNotFoundException("Błędny login lub hasło");
+        }
+        return userFound;
     }
 }

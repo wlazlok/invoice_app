@@ -42,9 +42,16 @@ public class LoginController {
     @PostMapping("registration")
     public String registerNewUser(@ModelAttribute("userForm") User userForm, BindingResult result, Model model) {
         List<String> errors = userService.validateUser(userForm);
+        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}";
+        boolean validPassword = userForm.getPassword().matches(pattern);
         if (!errors.isEmpty()) {
             model.addAttribute("userForm", userForm);
             model.addAttribute("errors", errors);
+            return "registration";
+        }
+        if (!validPassword) {
+            model.addAttribute("passwordValidation", passwordErrors());
+            model.addAttribute("userForm", userForm);
             return "registration";
         }
         try {
@@ -135,5 +142,12 @@ public class LoginController {
         }
         model.addAttribute("success", "Password successfully changed!");
         return "login";
+    }
+
+    public List<String> passwordErrors() {
+        return Arrays.asList("minimum 1 cyfrę",
+                "małe i duże litery",
+                "przynajmniej 1 znak specjalny",
+                "minimalna długość 8 znaków");
     }
 }

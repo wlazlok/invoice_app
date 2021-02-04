@@ -2,7 +2,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="utf-8">
-    <title>Create an account</title>
+    <title>Stwórz konto</title>
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
@@ -22,24 +22,23 @@
 <div sec:authorize="isAnonymous()">
     <div class="container">
         <form method="POST" modelAttribute="userForm" th:object="${userForm}" class="form-signin">
-            <h2 class="form-signin-heading">Create your account</h2>
+            <h2 class="form-signin-heading">Stwórz konto</h2>
 
             <input style="margin-bottom: 3%;" th:field="*{username}" type="text" path="username" class="form-control"
-                   placeholder="Username" autofocus="true" id="username">
-            <small id="user-exists" class="text-danger" style="display: none">Username already exists.</small>
+                   placeholder="Nazwa użytkownika" autofocus="true" id="username">
+            <small id="user-exists" class="text-danger" style="display: none">Nazwa już istnieje</small>
 
-            <input th:field="*{password}" type="password" path="password" class="form-control" placeholder="Password"
+            <input th:field="*{password}" type="password" path="password" class="form-control" placeholder="Hasło"
                    id="password">
-            <small id="password-validation" class="text-danger" style="display: none">Please enter your password</small>
+            <small id="password-validation" class="text-danger" style="display: none">Proszę wprowadzić hasło</small>
 
             <input th:field="*{confirmPassword}" type="password" path="confirmPassword" class="form-control"
-                   placeholder="Confirm your password" id="confirm-password">
-            <small id="passwordConfirm-validation" class="text-danger" style="display: none">Please enter your
-                password</small>
+                   placeholder="Potwierdź hasło" id="confirm-password">
+            <small id="passwordConfirm-validation" class="text-danger" style="display: none">Proszę potwierdzić swoje hasło</small>
             <p>
                 <input th:field="*{email}" type="text" path="email" class="form-control" placeholder="Email" id="email">
             </p>
-            <small id="email-validation" class="text-danger" style="display: none">Email is not valid</small>
+            <small id="email-validation" class="text-danger" style="display: none">Niepoprawny adres email</small>
 
             <div th:if="${errors} != null" class="container">
                 <div class="alert alert-danger" role="alert" th:each="err : ${errors}" th:text="${err}">
@@ -49,8 +48,15 @@
             <div class="alert alert-danger" role="alert" th:if="${error} != null" th:text="${error}">
             </div>
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit" id="submit" disabled>Submit</button>
-            <a style="text-align: center;" href="login"><p>Back home!</p></a>
+            <div class="alert alert-danger" role="alert" th:if="${passwordValidation} != null">
+                <a>Hasło musi zawierać</a>
+                <ul>
+                    <li th:each="error : ${passwordValidation}" th:text="${error}"></li>
+                </ul>
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit" id="submit" disabled>Stwórz</button>
+            <a style="text-align: center;" href="login"><p>Powrót</p></a>
             <text th:text="${users}" style="display: none" id="usersnames"></text>
         </form>
     </div>
