@@ -8,10 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,9 +57,15 @@ public class UserController {
     }
 
     @Transactional
-    @PostMapping("/edit")
+    @PutMapping("/edit")
     public String editUser(@ModelAttribute("user") User user, Model model) {
         User userFound = userService.getUserFromContext();
+        boolean isPasswordEqual = bCryptPasswordEncoder.matches(user.getPassword(), userFound.getPassword());
+        if (!isPasswordEqual) {
+            model.addAttribute("user", userFound);
+            model.addAttribute("error", "Niepoprawne hasło");
+            return "user/edit-user";
+        }
         user.setUsername(userFound.getUsername());
         user.setConfirmPassword(user.getPassword());
         List<String> errors = userService.validateUser(user);
@@ -77,6 +80,7 @@ public class UserController {
             // możliwość zmiany: email, nip, companyName, street, postalCode, city, bankAccount
             //todo haslo trzbea dorobic (zmiane)
             //todo dane uzytkownika na pocatku sa nullami -> w ifach zrobic jakies warunki
+            //todo przeniesc to do serwisu - niepotrzebna logika w controllerze
             if (userFound.getEmail() == null && user.getEmail() != null) {
                 userFound.setEmail(user.getEmail());
                 log.info("Email changed");
@@ -126,7 +130,6 @@ public class UserController {
                 userFound.setBankAccountNumber(user.getBankAccountNumber());
                 log.info("Bank acc number changed");
             }
-            System.out.println("zapisuje");
             User savedUser = userService.saveUser(userFound);
             log.info("usercontroller.user.updated.succesfully");
             model.addAttribute("user", savedUser);

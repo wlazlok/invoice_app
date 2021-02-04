@@ -159,7 +159,7 @@
         </div>
         <div class="alert alert-danger" role="alert" th:if="${error} != null" th:each="err : ${error}" th:text="${err}">
         </div>
-        <form method="POST" modelAttribute="user" th:object="${user}" class="form-signin">
+        <form method="put" modelAttribute="user" th:object="${user}" class="form-signin">
             <div class="form-element">
                 <h4>Nazwa uzytkownika</h4>
                 <input type="text" th:field="*{username}" disabled>
@@ -197,7 +197,7 @@
                 <input type="password" th:field="*{password}">
             </div>
             <button class="btn btn-primary btn-block btn-sm" type="submit"
-                    style="width: 150px; margin-top: 2%;background-color: #484FFF;color: white;">Dodaj
+                    style="width: 150px; margin-top: 2%;background-color: #484FFF;color: white;">Zmień
             </button>
         </form>
     </section>

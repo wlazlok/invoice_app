@@ -1,9 +1,9 @@
 package app.invoice.models;
 
 public enum PayingMethods {
-    cash("Cash"),
-    card("Card"),
-    transfer("Transfer");
+    cash("Gotówka"),
+    card("Karta"),
+    transfer("Przelew");
 
     private final String method;
 
