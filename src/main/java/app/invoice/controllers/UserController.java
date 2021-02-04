@@ -57,11 +57,12 @@ public class UserController {
     }
 
     @Transactional
-    @PutMapping("/edit")
+    @PostMapping("/edit")
     public String editUser(@ModelAttribute("user") User user, Model model) {
         User userFound = userService.getUserFromContext();
         boolean isPasswordEqual = bCryptPasswordEncoder.matches(user.getPassword(), userFound.getPassword());
         if (!isPasswordEqual) {
+            log.info("user.controller.incorrect.confirm.password");;
             model.addAttribute("user", userFound);
             model.addAttribute("error", "Niepoprawne hasło");
             return "user/edit-user";
