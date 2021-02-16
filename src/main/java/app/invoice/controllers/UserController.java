@@ -1,5 +1,6 @@
 package app.invoice.controllers;
 
+import app.invoice.exceptions.IncorrectPassword;
 import app.invoice.models.User;
 import app.invoice.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -59,86 +60,33 @@ public class UserController {
     @Transactional
     @PostMapping("/edit")
     public String editUser(@ModelAttribute("user") User user, Model model) {
-        User userFound = userService.getUserFromContext();
-        boolean isPasswordEqual = bCryptPasswordEncoder.matches(user.getPassword(), userFound.getPassword());
-        if (!isPasswordEqual) {
-            log.info("user.controller.incorrect.confirm.password");;
-            model.addAttribute("user", userFound);
-            model.addAttribute("error", "Niepoprawne hasło");
-            return "user/edit-user";
-        }
-        user.setUsername(userFound.getUsername());
-        user.setConfirmPassword(user.getPassword());
-        List<String> errors = userService.validateUser(user);
-        if (!errors.isEmpty()) {
-            log.info("usercontroller.validate.user.errors");
-            model.addAttribute("user", user);
-            model.addAttribute("error", errors);
-            return "user/edit-user";
-        }
-
+        User dbUser = userService.getUserFromContext();
         try {
-            // możliwość zmiany: email, nip, companyName, street, postalCode, city, bankAccount
-            //todo haslo trzbea dorobic (zmiane)
-            //todo dane uzytkownika na pocatku sa nullami -> w ifach zrobic jakies warunki
-            //todo przeniesc to do serwisu - niepotrzebna logika w controllerze
-            if (userFound.getEmail() == null && user.getEmail() != null) {
-                userFound.setEmail(user.getEmail());
-                log.info("Email changed");
-            } else if (!userFound.getEmail().equals(user.getEmail())) {
-                userFound.setEmail(user.getEmail());
-                log.info("Email changed");
+            //walidacja
+            user.setUsername(dbUser.getUsername());
+            user.setConfirmPassword(user.getPassword());
+            List<String> errors = userService.validateUser(user);
+            if (!errors.isEmpty()) {
+                log.info("usercontroller.validate.user.errors");
+                model.addAttribute("user", dbUser);
+                model.addAttribute("error", errors);
+                return "user/edit-user";
             }
-            if (userFound.getNip() == null && user.getNip() != null) {
-                userFound.setNip(user.getNip());
-                log.info("Nip changed");
-            } else if (!userFound.getNip().equals(user.getNip())) {
-                userFound.setNip(user.getNip());
-                log.info("Nip changed");
-            }
-            if (userFound.getCompanyName() == null && user.getCompanyName() != null) {
-                userFound.setCompanyName(user.getCompanyName());
-                log.info("Company name changed");
-            } else if (!userFound.getCompanyName().equals(user.getCompanyName())) {
-                userFound.setCompanyName(user.getCompanyName());
-                log.info("Company name changed");
-            }
-            if (userFound.getStreet() == null && user.getStreet() != null) {
-                userFound.setStreet(user.getStreet());
-                log.info("Street changed");
-            } else if (!userFound.getStreet().equals(user.getStreet())) {
-                userFound.setStreet(user.getStreet());
-                log.info("Street changed");
-            }
-            if (userFound.getPostalCode() == null && user.getPostalCode() != null) {
-                userFound.setPostalCode(user.getPostalCode());
-                log.info("Postal code changed");
-            } else if (!userFound.getPostalCode().equals(user.getPostalCode())) {
-                userFound.setPostalCode(user.getPostalCode());
-                log.info("Postal code changed");
-            }
-            if (userFound.getCity() == null && user.getCity() != null) {
-                userFound.setCity(user.getCity());
-                log.info("City changed");
-            } else if (!userFound.getCity().equals(user.getCity())) {
-                userFound.setCity(user.getCity());
-                log.info("City changed");
-            }
-            if (userFound.getBankAccountNumber() == null && user.getBankAccountNumber() != null) {
-                userFound.setBankAccountNumber(user.getBankAccountNumber());
-                log.info("Bank acc number changed");
-            } else if (!userFound.getBankAccountNumber().equals(user.getBankAccountNumber())) {
-                userFound.setBankAccountNumber(user.getBankAccountNumber());
-                log.info("Bank acc number changed");
-            }
-            User savedUser = userService.saveUser(userFound);
+            //edycja oraz zapis zmian
             log.info("usercontroller.user.updated.succesfully");
+            User savedUser = userService.editUser(user, dbUser);
+            model.addAttribute("error", "Dane zostały zaktualizowane");
             model.addAttribute("user", savedUser);
+            return "user/edit-user";
+        } catch (IncorrectPassword ex) {
+            log.info("user.controller.incorrect.confirm.password");
+            model.addAttribute("user", dbUser);
+            model.addAttribute("error", ex.getMessage());
             return "user/edit-user";
         } catch (Exception e) {
             log.info("usercontroller.update.catch.errors " + e.getMessage());
             model.addAttribute("error", e.getMessage());
-            model.addAttribute("user", userFound);
+            model.addAttribute("user", dbUser);
             return "user/edit-user";
         }
     }

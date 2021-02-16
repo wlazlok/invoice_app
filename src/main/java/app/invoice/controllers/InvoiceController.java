@@ -123,7 +123,6 @@ public class InvoiceController {
 
     @RequestMapping(path = "/print/{id}")
     public ResponseEntity<?> getPDF(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //todo obsluga bledow itp
         Invoice invoice = invoiceService.getInvoiceById(Long.valueOf(id));
 
         WebContext context = new WebContext(request, response, servletContext);

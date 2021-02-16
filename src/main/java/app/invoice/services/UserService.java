@@ -1,6 +1,7 @@
 package app.invoice.services;
 
 import app.invoice.configuration.ResourceBundleProperties;
+import app.invoice.exceptions.IncorrectPassword;
 import app.invoice.models.ChangeUserPasswordForm;
 import app.invoice.models.Invoice;
 import app.invoice.models.ResetPasswordForm;
@@ -66,6 +67,65 @@ public class UserService {
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    public User editUser(User user, User dbUser) {
+        boolean isPasswordEqual = bCryptPasswordEncoder.matches(user.getPassword(), dbUser.getPassword());
+        if (!isPasswordEqual) {
+            throw new IncorrectPassword("Niepoprawne hasło");
+        }
+        if (dbUser.getEmail() == null && user.getEmail() != null) {
+            dbUser.setEmail(user.getEmail());
+            log.info("Email changed");
+        } else if (!dbUser.getEmail().equals(user.getEmail())) {
+            dbUser.setEmail(user.getEmail());
+            log.info("Email changed");
+        }
+        if (dbUser.getNip() == null && user.getNip() != null) {
+            dbUser.setNip(user.getNip());
+            log.info("Nip changed");
+        } else if (!dbUser.getNip().equals(user.getNip())) {
+            dbUser.setNip(user.getNip());
+            log.info("Nip changed");
+        }
+        if (dbUser.getCompanyName() == null && user.getCompanyName() != null) {
+            dbUser.setCompanyName(user.getCompanyName());
+            log.info("Company name changed");
+        } else if (!dbUser.getCompanyName().equals(user.getCompanyName())) {
+            dbUser.setCompanyName(user.getCompanyName());
+            log.info("Company name changed");
+        }
+        if (dbUser.getStreet() == null && user.getStreet() != null) {
+            dbUser.setStreet(user.getStreet());
+            log.info("Street changed");
+        } else if (!dbUser.getStreet().equals(user.getStreet())) {
+            dbUser.setStreet(user.getStreet());
+            log.info("Street changed");
+        }
+        if (dbUser.getPostalCode() == null && user.getPostalCode() != null) {
+            dbUser.setPostalCode(user.getPostalCode());
+            log.info("Postal code changed");
+        } else if (!dbUser.getPostalCode().equals(user.getPostalCode())) {
+            dbUser.setPostalCode(user.getPostalCode());
+            log.info("Postal code changed");
+        }
+        if (dbUser.getCity() == null && user.getCity() != null) {
+            dbUser.setCity(user.getCity());
+            log.info("City changed");
+        } else if (!dbUser.getCity().equals(user.getCity())) {
+            dbUser.setCity(user.getCity());
+            log.info("City changed");
+        }
+        if (dbUser.getBankAccountNumber() == null && user.getBankAccountNumber() != null) {
+            dbUser.setBankAccountNumber(user.getBankAccountNumber());
+            log.info("Bank account number changed");
+        } else if (!dbUser.getBankAccountNumber().equals(user.getBankAccountNumber())) {
+            dbUser.setBankAccountNumber(user.getBankAccountNumber());
+            log.info("Bank account number changed");
+        }
+        User savedUser = saveUser(dbUser);
+        log.info("userService.edit.successfully");
+        return savedUser;
     }
 
     public List<String> validateUser(User user) {
@@ -159,7 +219,6 @@ public class UserService {
     public String createLink(String tempPass, String userName) {
         byte[] encodedUserName = Base64.getEncoder().encode(userName.getBytes());
         byte[] encodedTempPassword = Base64.getEncoder().encode(tempPass.getBytes());
-        //todo change link when front ready
         return "http://localhost:8080/reset/password?user=" + new String(encodedUserName, StandardCharsets.UTF_8) +
                 "&pass=" + new String(encodedTempPassword, StandardCharsets.UTF_8);
     }
@@ -168,31 +227,10 @@ public class UserService {
         return UUID.randomUUID().toString();
     }
 
-    public List<String> validateUserModel(User user) {
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        List<String> errors = Arrays.asList();
-
-        if (!violations.isEmpty()) {
-            violations.stream().forEach(err -> {
-                errors.add(err.getMessage());
-            });
-            log.info("Validation finished with status: " + false);
-            return errors;
-        }
-
-        return Arrays.asList();
-    }
-
     public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    public void deleteUser(String userName) throws Exception {
-
-        User userFound = findUserByUserName(userName);
-
-        userRepository.deleteById(userFound.getId());
-    }
 
     public User getUserById(Long id) {
         return userRepository.getById(id);
@@ -212,7 +250,6 @@ public class UserService {
     }
 
     public List<Invoice> getAllInvoices() {
-        //todo obsluga bledow itp
         return getUserFromContext().getInvoices();
     }
 }
