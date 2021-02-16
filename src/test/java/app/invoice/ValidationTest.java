@@ -2,7 +2,6 @@ package app.invoice;
 
 import app.invoice.models.*;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
@@ -24,13 +23,11 @@ class ValidationTest {
         validationErrors.clear();
     }
 
-    @Disabled
     @Test
     void ChangeUserPasswordFormWithNullAllFieldsTest() {
-        List<String> errors = Arrays.asList("ChangeUserPasswordForm new password is blank",
+        List<String> errors = Arrays.asList("ChangeUserPasswordForm old password is blank",
                 "ChangeUserPasswordForm username is blank",
-                "ChangeUserPasswordForm confirm password is blank",
-                "ChangeUserPasswordForm old password is blank");
+                "ChangeUserPasswordForm username is blank");
 
         ChangeUserPasswordForm changeUserPasswordForm = BuildModels.changeUserPasswordFormWithAllFieldsNull();
         Set<ConstraintViolation<ChangeUserPasswordForm>> violations = validator.validate(changeUserPasswordForm);
@@ -43,15 +40,15 @@ class ValidationTest {
 
         assertEquals(errors, validationErrors);
     }
-    @Disabled
+
     @Test
     void ContractorWithNullAllFieldsTest() {
-        List<String> errors = Arrays.asList("Contractor postal code is blank",
-                "Contractor company name is blank",
-                "Contractor city is blank",
-                "Contractor NIP is blank",
-                "Contractor street is blank",
-                "Contractor email is blank");
+        List<String> errors = Arrays.asList("Pole NIP nie może być puste",
+                "Pole email nie może być puste",
+                "Pole kod pocztowy nie może być puste",
+                "Pole miasto nie może być puste",
+                "Pole nazwa firmy nie może być puste",
+                "Pole ulica nie może być puste");
 
         Contractor contractor = BuildModels.contractorWithNullAlFields();
         Set<ConstraintViolation<Contractor>> violations = validator.validate(contractor);
@@ -64,12 +61,12 @@ class ValidationTest {
 
         assertEquals(errors, validationErrors);
     }
-    @Disabled
+
     @Test
     void GoodsAndServicesWithNullAllFieldsTest() {
-        List<String> errors = Arrays.asList("GoodsAndServices name is null",
-                "GoodsAndServices price is blank",
-                "GoodsAndServices unit is blank");
+        List<String> errors = Arrays.asList("Prosze podać jednostkę",
+                "Proszę podać cenę",
+                "Proszę podać nazwę");
 
         GoodsAndServices goodsAndServices = BuildModels.goodsAndServicesWithNullAllFields();
         Set<ConstraintViolation<GoodsAndServices>> violations = validator.validate(goodsAndServices);
@@ -82,12 +79,15 @@ class ValidationTest {
 
         assertEquals(errors, validationErrors);
     }
-    @Disabled
+
     @Test
     void InvoiceWithNullAllFieldsTest() {
-        List<String> errors = Arrays.asList("Invoice city is blank",
-                "Invoice invoice number is blank",
-                "Invoice paying method is blank");
+        List<String> errors = Arrays.asList("Proszę podać datę płatności",
+                "Proszę podać datę sprzedaży",
+                "Proszę podać datę wystawienia",
+                "Proszę podać miejsce wystawienia",
+                "Proszę podać numer faktury",
+                "Proszę wybrać sposób płatności");
 
         Invoice invoice = BuildModels.InvoiceWithNullAllFields();
         Set<ConstraintViolation<Invoice>> violations = validator.validate(invoice);
@@ -100,7 +100,7 @@ class ValidationTest {
 
         assertEquals(errors, validationErrors);
     }
-    @Disabled
+
     @Test
     void ResetPasswordFormWithNullAllFieldsTest() {
         List<String> errors = Arrays.asList("ResetPasswordForm email is blank",
@@ -117,19 +117,14 @@ class ValidationTest {
 
         assertEquals(errors, validationErrors);
     }
-    @Disabled
+
     @Test
     void UserWithNullAllFields() {
-        List<String> errors = Arrays.asList("User NIP is blank",
-                "User bank ccount number is blank",
-                "User city is blank",
-                "User company name is blank",
-                "User email is blank",
-                "User password is blank",
-                "User postal code is blank",
-                "User street is blank",
-                "User username is null",
-                "user.confirmpassword.is.null");
+        List<String> errors = Arrays.asList("msg.err.user.email.is.null",
+                "msg.err.user.password.is.empty",
+                "msg.err.user.password.is.empty",
+                "msg.err.user.username.is.empty" ,
+                "msg.err.user.username.is.empty");
 
         User user = BuildModels.UserWithNullAllFields();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
