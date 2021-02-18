@@ -49,7 +49,6 @@ public class InvoiceService {
         double suma = 0;
         List<InvoicePositions> positions = saved.getInvoicePositions().stream().distinct().collect(Collectors.toList());
         for (InvoicePositions pos : positions) {
-            System.out.println("raz");
             suma += pos.getTotalPrice();
         }
         saved.setTotalPrice(suma);
@@ -69,7 +68,6 @@ public class InvoiceService {
         double suma = 0;
         List<InvoicePositions> positions = foundInvoice.getInvoicePositions().stream().distinct().collect(Collectors.toList());
         for (InvoicePositions pos : positions) {
-            System.out.println("raz");
             suma += pos.getTotalPrice();
         }
         foundInvoice.setTotalPrice(suma);

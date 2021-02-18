@@ -54,12 +54,7 @@ public class UserService {
     }
 
     public User createUser(User user) throws Exception {
-        Iterable<User> users = userRepository.findAll();
-        List<String> userNames = new ArrayList<>();
-
-        users.forEach(usr -> {
-            userNames.add(usr.getUsername());
-        });
+        List<String> userNames = getAllUsernames();
 
         if (userNames.contains(user.getUsername())) {
             log.info("Username exists in DB");
@@ -195,7 +190,7 @@ public class UserService {
 
         if (!resetForm.getEmail().equals(userFound.getEmail())) {
             log.info("Email not found!");
-            throw new Exception("Email not found ");
+            throw new Exception("Email not found");
         }
         String tmpPass = createTempPassword();
 
