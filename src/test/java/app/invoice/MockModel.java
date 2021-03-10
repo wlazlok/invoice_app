@@ -1,6 +1,7 @@
 package app.invoice;
 
 import app.invoice.models.Contractor;
+import app.invoice.models.GoodsAndServices;
 import app.invoice.models.User;
 
 public class MockModel {
@@ -49,4 +50,24 @@ public class MockModel {
 
         return contractor;
     }
+
+    public GoodsAndServices generateGoodsAndServices() {
+        GoodsAndServices goodsAndServices = new GoodsAndServices();
+        goodsAndServices.setUser(generateUserFromContext());
+        goodsAndServices.setPrice(12.2);
+        goodsAndServices.setName("test");
+        goodsAndServices.setUnit("unit");
+        goodsAndServices.setId(1L);
+        return goodsAndServices;
+    }
+    public GoodsAndServices generateGoodsAndServicesWithErrors() {
+        GoodsAndServices goodsAndServices = new GoodsAndServices();
+        goodsAndServices.setUser(generateUserFromContext());
+        goodsAndServices.setPrice(null);
+        goodsAndServices.setName("test");
+        goodsAndServices.setUnit("unit");
+        goodsAndServices.setId(1L);
+        return goodsAndServices;
+    }
+
 }
