@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -39,9 +40,9 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
     private final UserService userService;
     private final InvoiceRepository invoiceRepository;
-    private final TemplateEngine templateEngine;
+    private final ITemplateEngine templateEngine;
 
-    public InvoiceController(InvoiceService invoiceService, UserService userService, InvoiceRepository invoiceRepository, TemplateEngine templateEngine) {
+    public InvoiceController(InvoiceService invoiceService, UserService userService, InvoiceRepository invoiceRepository, ITemplateEngine templateEngine) {
         this.invoiceService = invoiceService;
         this.userService = userService;
         this.invoiceRepository = invoiceRepository;

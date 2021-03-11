@@ -1,8 +1,9 @@
 package app.invoice;
 
-import app.invoice.models.Contractor;
-import app.invoice.models.GoodsAndServices;
-import app.invoice.models.User;
+import app.invoice.models.*;
+
+import java.util.Arrays;
+import java.util.Date;
 
 public class MockModel {
 
@@ -68,6 +69,20 @@ public class MockModel {
         goodsAndServices.setUnit("unit");
         goodsAndServices.setId(1L);
         return goodsAndServices;
+    }
+
+    public Invoice generateInvoice() {
+        Invoice invoice = new Invoice();
+        invoice.setId(1L);
+        invoice.setInvoiceNumber("123-TEST");
+        invoice.setDateOfIssue(new Date());
+        invoice.setCity("Cracow");
+        invoice.setSaleDate(new Date());
+        invoice.setPaymentDate(new Date());
+        invoice.setPayingMethod(PayingMethods.card);
+        invoice.setTotalPrice(123.42);
+        invoice.setSeenDate(new Date());
+        return invoice;
     }
 
 }

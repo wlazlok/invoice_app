@@ -15,8 +15,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static app.invoice.utils.MapObject.asJsonString;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
@@ -136,7 +139,53 @@ public class GoodsAndServicesControllerTest {
                 .andReturn();
     }
 
-    // TODO editGood
+    @Test
+    void editGoodValidationErrors() throws Exception {
+        //given
+        GoodsAndServices goodsAndServices = mockModel.generateGoodsAndServices();
+        List<String> errors = Arrays.asList("Maksymalna długość pola: 50 znaków");
+        //when
+        when(goodsAndServicesService.validateGoodsAndServices(any(GoodsAndServices.class))).thenReturn(errors);
+        //then
+        MvcResult mvcResult = mockMvc.perform(post(URL + "/edit/{goodId}", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(goodsAndServices)))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("goods/add-good"))
+                .andExpect(model().attributeExists("error"))
+                .andExpect(model().attribute("error", hasSize(1)))
+                .andReturn();
+    }
+
+    @Test
+    void editGood() throws Exception {
+        //given
+        GoodsAndServices goodsAndServices = mockModel.generateGoodsAndServices();
+        //when
+        when(goodsAndServicesService.validateGoodsAndServices(any(GoodsAndServices.class))).thenReturn(Collections.emptyList());
+        //then
+        MvcResult mvcResult = mockMvc.perform(post(URL + "/edit/{goodId}", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(goodsAndServices)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/user/goods"))
+                .andReturn();
+    }
+
+    @Test
+    void editGoodThrowException() throws Exception {
+        //given
+        GoodsAndServices goodsAndServices = mockModel.generateGoodsAndServices();
+        //when
+        when(goodsAndServicesService.editGoodsAndServices(any(GoodsAndServices.class), anyLong())).thenThrow(Exception.class);
+        //then
+        MvcResult mvcResult = mockMvc.perform(post(URL + "/edit/{goodId}", "2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(goodsAndServices)))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("goods/add-good"))
+                .andReturn();
+    }
 
     @Test
     void deleteGood() throws Exception {
