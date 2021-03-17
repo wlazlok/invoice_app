@@ -1,5 +1,6 @@
-package app.invoice;
+package app.invoice.services;
 
+import app.invoice.MockModel;
 import app.invoice.models.Contractor;
 import app.invoice.models.User;
 import app.invoice.repositories.ContractorRepository;
@@ -12,24 +13,32 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.parameters.P;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class ContractorServiceTest {
 
+    private final MockModel mockModel = new MockModel();
+
     @Mock
     private ContractorRepository contractorRepository;
+
     @Mock
     private UserRepository userRepository;
+
     @InjectMocks
     private ContractorService contractorService;
 
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+
+    @Mock
     Validator validator = factory.getValidator();
 
     @BeforeEach
@@ -141,6 +150,62 @@ public class ContractorServiceTest {
             Contractor contractorFound = contractorService.getContractorById(1L);
         } catch (Exception ex) {
             assertTrue(ex instanceof Exception);
+            assertEquals("Contractor not found in database!", ex.getMessage());
+        }
+    }
+
+    /**
+     * validateContractor() method
+     * 1. validateContractor OK
+     * 2. validateContractor (!violations.isEmpty())
+     */
+
+    @Test
+    void validateContractorHasErrors() {
+        Contractor contractor = mockModel.generateContractor();
+        contractor.setCity(null);
+
+        List<String> result = contractorService.validateContractor(contractor);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void validateContractor() {
+        Contractor contractor = mockModel.generateContractor();
+        contractor.setNip("1234567890");
+
+        List<String> result = contractorService.validateContractor(contractor);
+
+        assertNotNull(result);
+        System.out.println(result);
+        assertTrue(result.isEmpty());
+    }
+
+    /**
+     * deleteContractor() method
+     * 1. deleteContractor OK
+     * 2. deleteContractor throw Exception
+     */
+
+    @Test
+    void deleteContractor() throws Exception {
+        Contractor contractor = mockModel.generateContractor();
+
+        when(contractorRepository.getById(anyLong())).thenReturn(contractor);
+
+        contractorService.deleteContractor(anyLong());
+    }
+
+    @Test
+    void deleteContractorThrowException() {
+        when(contractorRepository.getById(anyLong())).thenReturn(null);
+
+        try {
+            contractorService.deleteContractor(anyLong());
+        } catch (Exception ex) {
+            assertNotNull(ex);
             assertEquals("Contractor not found in database!", ex.getMessage());
         }
     }

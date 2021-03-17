@@ -1,5 +1,6 @@
-package app.invoice;
+package app.invoice.services;
 
+import app.invoice.BuildModels;
 import app.invoice.models.Contractor;
 import app.invoice.models.Invoice;
 import app.invoice.models.User;
