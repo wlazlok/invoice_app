@@ -18,14 +18,11 @@ import java.util.List;
 @Slf4j
 public class UserController {
 
-    private final UserService userService;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private UserService userService;
 
     @GetMapping("/contractors")
     public String getContractorsView(Model model) {

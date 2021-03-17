@@ -61,6 +61,7 @@ public class MockModel {
         goodsAndServices.setId(1L);
         return goodsAndServices;
     }
+
     public GoodsAndServices generateGoodsAndServicesWithErrors() {
         GoodsAndServices goodsAndServices = new GoodsAndServices();
         goodsAndServices.setUser(generateUserFromContext());
@@ -85,4 +86,10 @@ public class MockModel {
         return invoice;
     }
 
+    public ResetPasswordForm generateResetPasswordForm() {
+        ResetPasswordForm resetPasswordForm = new ResetPasswordForm();
+        resetPasswordForm.setUserName("test");
+        resetPasswordForm.setEmail("test@email.com");
+        return resetPasswordForm;
+    }
 }
