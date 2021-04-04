@@ -10,7 +10,14 @@
 **Project created with Spring Boot as a final project at the university.**
 
 ## About application
-todo
+* Create user account
+* Edit user data
+* Create contractors for logged user
+* Edit contractor data
+* Create products for logged user and contractor 
+* Edit product data
+* Create new invoice
+* Download invoice as PDF file 
 
 ## Technologies
 Project is created with:
