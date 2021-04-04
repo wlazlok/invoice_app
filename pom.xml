@@ -15,7 +15,6 @@
     <description>Invoice App</description>
 
     <dependencies>
-        uncomment when no sql instance
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
