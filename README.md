@@ -25,6 +25,7 @@ Project is created with:
 * Boostrap
 * JavaScript
 * Project Lombok
+* IText (to creating PDF files)
 
 ## Setup
 1. git clone https://github.com/wlazlok/invoice_app.git
