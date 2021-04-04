@@ -40,10 +40,11 @@ Project is created with:
 3. mvn spring-boot:run
 
 Then you can open app in browser on port **8080** *(http://localhost:8080/)*
-* login: admin
-* password: admin
 
 App is also hosted at heroku: https://test-invoice.herokuapp.com/
+
+* login: admin
+* password: admin
 
 ## Author
 * **[Karol Wlazło](https://github.com/wlazlok)**
